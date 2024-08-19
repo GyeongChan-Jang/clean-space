@@ -1,4 +1,7 @@
+import { initializeKakaoSDK } from "@react-native-kakao/core";
+import { login, logout } from "@react-native-kakao/user";
 import { router } from "expo-router";
+import { useEffect } from "react";
 import { Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -6,22 +9,29 @@ import CustomButton from "@/components/CustomButton";
 import { supabase } from "@/lib/supabase";
 
 const SignIn = () => {
+  useEffect(() => {
+    if (!process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY) return;
+    initializeKakaoSDK(process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY);
+  }, []);
   const handleKakaoLogin = async () => {
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "kakao",
-      });
-      console.log(data);
-      if (error) throw error;
+    const response = await login();
+    console.log("kakaologin", response);
 
-      if (data) {
-        // 로그인 성공 후 처리
-        router.replace("/(root)/(tabs)/home");
-      }
+    if (!response.idToken) return;
+
+    try {
+      const { data } = await supabase.auth.signInWithIdToken({
+        provider: "kakao",
+        token: response.idToken,
+      });
+      console.log("supabase 카카오 로그인 성공!", data);
     } catch (error) {
-      console.error("Kakao login error:", error);
-      // 에러 처리 (예: 사용자에게 알림 표시)
+      console.log("카카오 로그인중 에러가 발생했습니다.", error);
     }
+  };
+
+  const handleKakaoLogout = async () => {
+    await logout();
   };
   return (
     <SafeAreaView className="flex-1 items-center bg-primary-500">
