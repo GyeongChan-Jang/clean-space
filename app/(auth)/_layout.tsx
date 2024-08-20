@@ -10,6 +10,7 @@ const Layout = () => {
     <Stack>
       <Stack.Screen name="welcome" options={{ headerShown: false }} />
       <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+      <Stack.Screen name="user-setup" options={{ headerShown: false }} />
     </Stack>
   );
 };

@@ -21,8 +21,6 @@ buildscript {
     }
 }
 
-apply plugin: "com.facebook.react.rootproject"
-
 allprojects {
     repositories {
         maven {
@@ -34,8 +32,14 @@ allprojects {
             url(new File(['node', '--print', "require.resolve('jsc-android/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim(), '../dist'))
         }
 
+        maven {
+            url "https://devrepo.kakao.com/nexus/content/groups/public/"
+        }
+
         google()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
     }
 }
+
+apply plugin: "com.facebook.react.rootproject"
