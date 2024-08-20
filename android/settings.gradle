@@ -44,7 +44,7 @@ if (getRNMinorVersion() >= 75) {
   }
 }
 
-rootProject.name = 'cleanspace'
+rootProject.name = 'clean-space'
 
 dependencyResolutionManagement {
   versionCatalogs {

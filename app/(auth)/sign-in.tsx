@@ -1,6 +1,5 @@
 import { initializeKakaoSDK } from "@react-native-kakao/core";
 import { login, logout } from "@react-native-kakao/user";
-import { router } from "expo-router";
 import { useEffect } from "react";
 import { Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,16 +14,20 @@ const SignIn = () => {
   }, []);
   const handleKakaoLogin = async () => {
     const response = await login();
-    console.log("kakaologin", response);
 
     if (!response.idToken) return;
 
     try {
-      const { data } = await supabase.auth.signInWithIdToken({
+      const { data, error } = await supabase.auth.signInWithIdToken({
         provider: "kakao",
         token: response.idToken,
       });
-      console.log("supabase 카카오 로그인 성공!", data);
+
+      // await supabase.from('users').upsert({
+      //   name: data.
+      // })
+
+      console.log("error", error);
     } catch (error) {
       console.log("카카오 로그인중 에러가 발생했습니다.", error);
     }
