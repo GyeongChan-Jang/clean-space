@@ -1,11 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import { router } from "expo-router";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
-  Image,
-  Keyboard,
+  Alert,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   Text,
   TextInput,
@@ -14,162 +14,199 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import CustomButton from "@/components/common/CustomButton";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase";
+import userStore from "@/store/userStore";
 
-const defaultImage = require("@/assets/images/profile-default.png");
+type FormData = {
+  name: string;
+  phone: string;
+};
 
 const UserSetup = () => {
-  // const { authUser, setIsRegistered } = useAuthStore();
-  // const { checkAndRequestPermission } = usePermission();
+  const { user } = useAuth();
+  const { setUser } = userStore();
 
-  const [role, setRole] = useState<"host" | "cleaner">("host");
-  const [name, setName] = useState("");
-  const [profileImage, setProfileImage] = useState(defaultImage);
-  // const imageOption = useModal();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    defaultValues: {
+      name: "",
+      phone: "",
+    },
+  });
 
-  const handleImagePress = async () => {
-    Keyboard.dismiss();
-    // const hasPermission = await checkAndRequestPermission("PHOTO");
-    // if (hasPermission) {
-    //   imageOption.show();
-    // }
+  const [role, setRole] = React.useState<"host" | "cleaner">("host");
+
+  const onSubmit = async (data: FormData) => {
+    console.log("formData", data);
+
+    if (!user) {
+      Alert.alert("로그인 정보를 찾을 수 없습니다.");
+      router.replace("/(auth)/sign-in");
+      return;
+    }
+
+    const { data: userData, error } = await supabase
+      .from("users")
+      .update({
+        id: user.id,
+        role,
+        name: data.name,
+        phone: data.phone,
+        profile_image: user.user_metadata.picture,
+      })
+      .eq("id", user.id)
+      .select();
+
+    if (error) {
+      Alert.alert("사용자 등록 중 오류가 발생했습니다.");
+      return;
+    }
+
+    if (userData) {
+      setUser(userData[0]);
+      router.replace("/(root)/(tabs)/home");
+    }
   };
-
-  // const imageSource = authUser?.user_metadata?.picture
-  //   ? { uri: authUser.user_metadata.picture }
-  //   : defaultImage;
-  //
-  // const imagePicker = useImagePicker({
-  //   initialImages: [imageSource],
-  //   mode: "single",
-  //   onSettled: imageOption.hide,
-  // });
-  //
-  // useEffect(() => {
-  //   if (authUser?.user_metadata.picture) {
-  //     setProfileImage({ uri: authUser.user_metadata.picture });
-  //   }
-  // }, [authUser]);
-  //
-  // useEffect(() => {
-  //   if (imagePicker.imageUris.length > 0) {
-  //     setProfileImage({ uri: imagePicker.imageUris[0].uri });
-  //   }
-  // }, [imagePicker.imageUris]);
-  //
-  // const handleSubmit = async () => {
-  //   if (!authUser) return;
-  //
-  //   try {
-  //     const { data, error } = await supabase
-  //       .from("users")
-  //       .upsert({
-  //         id: authUser.id,
-  //         role,
-  //         name,
-  //         email: authUser.user_metadata.email,
-  //         profile_image: profileImage.uri,
-  //       })
-  //       .eq("id", authUser.id);
-  //
-  //     setIsRegistered(true);
-  //
-  //     if (error) throw error;
-  //   } catch (error) {
-  //     console.error("Error updating user profile:", error);
-  //   }
-  // };
-  //
-  // useEffect(() => {
-  //   if (authUser?.user_metadata.name) {
-  //     setName(authUser.user_metadata.name);
-  //   }
-  // }, [authUser]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
-        className="flex-1 px-5"
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 20}
+        className="flex-1"
       >
-        <ScrollView className="flex-grow" keyboardShouldPersistTaps="handled">
-          <View className="flex-1 justify-start">
-            <View className="items-center mb-5">
-              <View className="relative w-25 h-25">
-                <Pressable
-                  className="w-full h-full rounded-full overflow-hidden"
-                  onPress={handleImagePress}
-                >
-                  <Image
-                    className="w-full h-full rounded-full"
-                    resizeMode="cover"
-                    source={profileImage}
-                  />
-                  {/*{!authUser?.user_metadata.picture &&*/}
-                  {/*imagePicker.imageUris.length === 0 ? (*/}
-                  {/*  <View className="justify-center items-center border border-gray-200 rounded-full w-25 h-25">*/}
-                  {/*    <Ionicons*/}
-                  {/*      name="person"*/}
-                  {/*      size={40}*/}
-                  {/*      color={theme === "dark" ? "#e5e7eb" : "#9ca3af"}*/}
-                  {/*    />*/}
-                  {/*  </View>*/}
-                  {/*) : (*/}
-                  {/*  <Image*/}
-                  {/*    className="w-full h-full rounded-full"*/}
-                  {/*    resizeMode="cover"*/}
-                  {/*    source={profileImage}*/}
-                  {/*  />*/}
-                  {/*)}*/}
-                </Pressable>
-                <Pressable
-                  className="absolute -right-1 -bottom-1 bg-white p-1 rounded-full border border-gray-200 z-10"
-                  onPress={handleImagePress}
-                >
-                  <Ionicons name="camera" size={24} color={"#6b7280"} />
-                </Pressable>
-              </View>
-            </View>
-            <TextInput
-              className="border border-gray-300 rounded-md p-2.5 mb-5"
-              placeholder="이름을 입력해주세요."
-              value={name}
-              onChangeText={setName}
-            />
-            <View className="flex-row justify-between mb-5 gap-2.5">
-              <CustomButton
-                className="flex-1"
-                title="호스트"
-                bgVariant={role === "host" ? "primary" : "outline"}
+        <ScrollView
+          className="flex-1 px-6 font-Pretendard"
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View className="mt-10 mb-6">
+            <Text className="text-3xl font-bold text-gray-900 font-Pretendard">
+              사용자 등록
+            </Text>
+            <Text className="mt-2 text-lg text-gray-600 font-Pretendard">
+              Clean Space에 오신 것을 환영합니다.
+            </Text>
+          </View>
+
+          <View className="mb-6">
+            <Text className="text-xl font-medium text-gray-700 mb-3 font-PretendardBold">
+              역할 선택
+            </Text>
+            <View className="flex-row">
+              <TouchableOpacity
                 onPress={() => setRole("host")}
-              />
-              <CustomButton
-                className="flex-1"
-                title="클리너"
-                bgVariant={role === "cleaner" ? "primary" : "outline"}
+                className={`flex-1 py-3 ${
+                  role === "host" ? "bg-secondary-800" : "bg-gray-200"
+                } rounded-l-full items-center`}
+              >
+                <Text
+                  className={`text-lg ${role === "host" ? "text-white" : "text-gray-700"} font-PretendardBold`}
+                >
+                  호스트
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
                 onPress={() => setRole("cleaner")}
+                className={`flex-1 py-3 ${
+                  role === "cleaner" ? "bg-secondary-800" : "bg-gray-200"
+                } rounded-r-full items-center`}
+              >
+                <Text
+                  className={`text-lg ${role === "cleaner" ? "text-white" : "text-gray-700"} font-PretendardBold`}
+                >
+                  클리너
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View className="mb-6">
+            <Text className="text-xl font-medium text-gray-700 mb-3 font-PretendardBold">
+              이름
+            </Text>
+            <Controller
+              control={control}
+              rules={{
+                required: "이름을 입력해주세요.",
+                minLength: {
+                  value: 2,
+                  message: "이름은 최소 2자 이상이어야 합니다.",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  placeholder="이름을 입력해주세요"
+                  className="text-lg pb-2 border-b border-gray-300 text-gray-900 font-Pretendard"
+                  autoComplete="off"
+                />
+              )}
+              name="name"
+            />
+            {errors.name && (
+              <Text className="text-red-500 mt-1">{errors.name.message}</Text>
+            )}
+          </View>
+
+          <View className="mb-6">
+            <Text className="text-xl font-medium text-gray-700 mb-3 font-PretendardBold">
+              전화번호
+            </Text>
+            <Controller
+              control={control}
+              rules={{
+                required: "전화번호를 입력해주세요.",
+                pattern: {
+                  value: /^[0-9]{10,11}$/,
+                  message: "올바른 전화번호 형식이 아닙니다.",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  placeholder="전화번호를 입력해주세요"
+                  keyboardType="phone-pad"
+                  className="text-lg pb-2 border-b border-gray-300 text-gray-900 font-Pretendard"
+                  autoComplete="off"
+                />
+              )}
+              name="phone"
+            />
+            {errors.phone && (
+              <Text className="text-red-500 mt-1">{errors.phone.message}</Text>
+            )}
+          </View>
+
+          <View className="flex-1 justify-end mb-6">
+            <TouchableOpacity
+              className="bg-primary-500 py-4 rounded-lg items-center"
+              onPress={handleSubmit(onSubmit)}
+            >
+              <Text className="text-white text-xl font-PretendardBold">
+                완료
+              </Text>
+            </TouchableOpacity>
+
+            <View className="flex-row items-center justify-center mt-8">
+              <Ionicons
+                name="shield-checkmark-outline"
+                size={20}
+                color="#4B5563"
               />
+              <Text className="ml-2 text-gray-600 font-Pretendard">
+                Clean Space는 회원님의 개인정보를 안전하게 보호합니다.
+              </Text>
             </View>
           </View>
         </ScrollView>
-
-        <View className="pb-5">
-          <TouchableOpacity
-            className="bg-sky-500 p-4 rounded-md items-center"
-            // onPress={handleSubmit}
-          >
-            <Text className="text-white font-bold text-lg">완료</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/*<EditProfileOption*/}
-        {/*  onChangeImage={() =>*/}
-        {/*    imagePicker.handleChange("user-profiles", authUser?.id, "avatars")*/}
-        {/*  }*/}
-        {/*  isVisible={imageOption.isVisible}*/}
-        {/*  hideOption={imageOption.hide}*/}
-        {/*/>*/}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

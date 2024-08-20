@@ -6,7 +6,6 @@ import { Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import CustomButton from "@/components/common/CustomButton";
-import { Tables } from "@/database.types";
 import { supabase } from "@/lib/supabase";
 
 const SignIn = () => {
@@ -30,7 +29,7 @@ const SignIn = () => {
 
       // 사용자 정보 확인
       const { data: existingUser, error: userError } = await supabase
-        .from<"users", Tables<"users">>("users")
+        .from("users")
         .select()
         .eq("id", data.user?.id)
         .single();
@@ -41,7 +40,7 @@ const SignIn = () => {
         return;
       }
 
-      if (!existingUser) {
+      if (!existingUser && data.user.id && data.user.email) {
         const { data: newUser } = await supabase
           .from("users")
           .upsert({

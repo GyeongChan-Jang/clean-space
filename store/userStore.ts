@@ -4,6 +4,7 @@ import { Tables } from "@/database.types";
 
 export interface UserStore {
   user: Tables<"users"> | null;
+  setUser: (user: Tables<"users">) => void;
 }
 
 const userStore = create<UserStore>((set) => ({
