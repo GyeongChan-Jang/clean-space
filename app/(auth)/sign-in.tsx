@@ -57,10 +57,10 @@ const SignIn = () => {
         console.log("새로운 사용자 정보가 생성되었습니다.(sign-in)", newUser);
 
         router.push("/user-setup");
-        // router.push("/(root)/(tabs)/home");
+        // router.push("/(root)/(main-tabs)/home");
       } else {
         // 사용자 정보가 이미 있으면 홈 화면으로 이동
-        router.push("/(root)/(tabs)/home");
+        router.push("/(root)/(main-tabs)/home");
       }
     } catch (error) {
       Alert.alert("카카오 로그인 중 오류가 발생했습니다.", error?.toString());
@@ -97,7 +97,7 @@ const SignIn = () => {
         />
 
         <CustomButton
-          // onPress={() => router.navigate("/(root)/(tabs)/home")}
+          // onPress={() => router.navigate("/(root)/(main-tabs)/home")}
           onPress={() => {}}
           style={{ backgroundColor: "#222222" }}
           className="w-56 shadow-none rounded-2xl"

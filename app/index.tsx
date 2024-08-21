@@ -1,5 +1,5 @@
 import { initializeKakaoSDK } from "@react-native-kakao/core";
-import { isLogined } from "@react-native-kakao/user";
+import { isLogined, logout } from "@react-native-kakao/user";
 import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 
@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import userStore from "@/store/userStore";
 
 const Page = () => {
-  const { user: userAuth } = useAuth();
+  const { user: userAuth, signOut } = useAuth();
   const { user, initUser } = userStore();
   const [isKakaoLoggedIn, setIsKakaoLoggedIn] = useState<boolean | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
@@ -33,6 +33,11 @@ const Page = () => {
     initialize();
   }, []);
 
+  useEffect(() => {
+    signOut();
+    logout();
+  }, []);
+
   if (!isInitialized) {
     return null; // 또는 로딩 인디케이터를 표시
   }
@@ -41,10 +46,10 @@ const Page = () => {
   if (!userAuth && !isKakaoLoggedIn) return <Redirect href="/(auth)/welcome" />;
 
   // 2. 로그인O, 등록X -> /user-setup
-  if (userAuth && !user) return <Redirect href="/user-setup" />;
+  if (userAuth && !user) return <Redirect href="/(auth)/user-setup" />;
 
-  // 3. 로그인O, 등록O -> /(root)/(tabs)/home
-  return <Redirect href="/(root)/(tabs)/home" />;
+  // 3. 로그인O, 등록O -> /(root)/(main-tabs)/home
+  return <Redirect href="/(root)/(main-tabs)/home" />;
 };
 
 export default Page;

@@ -66,7 +66,7 @@ const UserSetup = () => {
 
     if (userData) {
       setUser(userData[0]);
-      router.replace("/(root)/(tabs)/home");
+      router.replace("/(root)/(main-tabs)/home");
     }
   };
 

@@ -66,7 +66,7 @@ const Layout = () => {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="(profile)"
         options={{
           title: "프로필",
           headerShown: false,
