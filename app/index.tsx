@@ -1,5 +1,5 @@
 import { initializeKakaoSDK } from "@react-native-kakao/core";
-import { isLogined, logout } from "@react-native-kakao/user";
+import { isLogined } from "@react-native-kakao/user";
 import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 
@@ -33,10 +33,10 @@ const Page = () => {
     initialize();
   }, []);
 
-  useEffect(() => {
-    signOut();
-    logout();
-  }, []);
+  // useEffect(() => {
+  //   signOut();
+  //   logout();
+  // }, []);
 
   if (!isInitialized) {
     return null; // 또는 로딩 인디케이터를 표시
