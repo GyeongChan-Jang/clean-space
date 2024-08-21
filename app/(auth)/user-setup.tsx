@@ -41,8 +41,6 @@ const UserSetup = () => {
   const [role, setRole] = React.useState<"host" | "cleaner">("host");
 
   const onSubmit = async (data: FormData) => {
-    console.log("formData", data);
-
     if (!user) {
       Alert.alert("로그인 정보를 찾을 수 없습니다.");
       router.replace("/(auth)/sign-in");
@@ -62,7 +60,7 @@ const UserSetup = () => {
       .select();
 
     if (error) {
-      Alert.alert("사용자 등록 중 오류가 발생했습니다.");
+      Alert.alert("사용자 등록 중 오류가 발생했습니다.", error.message);
       return;
     }
 

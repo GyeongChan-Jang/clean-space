@@ -5,11 +5,11 @@ export default () => {
       slug: "clean-space",
       version: "1.0.0",
       orientation: "portrait",
-      icon: "./assets/images/icon.png",
+      icon: "./assets/icons/icon.png",
       scheme: "clean-space",
       userInterfaceStyle: "automatic",
       splash: {
-        image: "./assets/images/splash.png",
+        image: "./assets/icons/splash-icon.gif",
         resizeMode: "contain",
         backgroundColor: "#ffffff",
       },
@@ -19,7 +19,7 @@ export default () => {
       },
       android: {
         adaptiveIcon: {
-          foregroundImage: "./assets/images/adaptive-icon.png",
+          foregroundImage: "./assets/icons/adaptive-icon.png",
           backgroundColor: "#ffffff",
         },
         package: "com.cleanspace",
@@ -27,7 +27,7 @@ export default () => {
       web: {
         bundler: "metro",
         output: "static",
-        favicon: "./assets/images/favicon.png",
+        favicon: "./assets/icons/favicon.png",
       },
       plugins: [
         "expo-router",

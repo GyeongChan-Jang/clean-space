@@ -1,12 +1,12 @@
 const icons = {
-  home: require("@/assets/images/home.png"),
-  homeFill: require("@/assets/images/home-fill.png"),
-  schedule: require("@/assets/images/schedule.png"),
-  scheduleFill: require("@/assets/images/schedule-fill.png"),
-  chat: require("@/assets/images/chat.png"),
-  chatFill: require("@/assets/images/chat-fill.png"),
-  profile: require("@/assets/images/profile.png"),
-  profileFill: require("@/assets/images/profile-fill.png"),
+  home: require("@/assets/icons/home.png"),
+  homeFill: require("@/assets/icons/home-fill.png"),
+  schedule: require("@/assets/icons/schedule.png"),
+  scheduleFill: require("@/assets/icons/schedule-fill.png"),
+  chat: require("@/assets/icons/chat.png"),
+  chatFill: require("@/assets/icons/chat-fill.png"),
+  profile: require("@/assets/icons/profile.png"),
+  profileFill: require("@/assets/icons/profile-fill.png"),
 };
 
 export { icons };

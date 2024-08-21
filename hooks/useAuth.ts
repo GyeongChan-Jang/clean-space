@@ -18,7 +18,7 @@ export function useAuth() {
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log(`Supabase auth event: ${event}`);
+        // console.log(`Supabase auth event: ${event}`);
         setAuthState({ user: session?.user ?? null, session });
         setLoading(false);
       },

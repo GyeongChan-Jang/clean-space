@@ -7,30 +7,33 @@ import { useAuth } from "@/hooks/useAuth";
 import userStore from "@/store/userStore";
 
 const Page = () => {
-  const { user: userAuth, session, signOut } = useAuth();
-  const { user } = userStore();
+  const { user: userAuth } = useAuth();
+  const { user, initUser } = userStore();
   const [isKakaoLoggedIn, setIsKakaoLoggedIn] = useState<boolean | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    if (!process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY) return;
-    initializeKakaoSDK(process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY);
+    const initialize = async () => {
+      if (process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY) {
+        initializeKakaoSDK(process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY);
+      }
 
-    const checkKakaoLogin = async () => {
       try {
+        await initUser();
         const loggedIn = await isLogined();
-
         setIsKakaoLoggedIn(loggedIn);
       } catch (error) {
-        console.error("카카오 로그인 상태 확인 중 오류 발생:", error);
+        console.error("초기화 중 오류 발생:", error);
         setIsKakaoLoggedIn(false);
+      } finally {
+        setIsInitialized(true);
       }
     };
 
-    checkKakaoLogin();
+    initialize();
   }, []);
 
-  // isKakaoLoggedIn이 null이면 아직 확인 중
-  if (isKakaoLoggedIn === null) {
+  if (!isInitialized) {
     return null; // 또는 로딩 인디케이터를 표시
   }
 
@@ -41,7 +44,7 @@ const Page = () => {
   if (userAuth && !user) return <Redirect href="/user-setup" />;
 
   // 3. 로그인O, 등록O -> /(root)/(tabs)/home
-  return <Redirect href={"/(auth)/sign-in"} />;
+  return <Redirect href="/(root)/(tabs)/home" />;
 };
 
 export default Page;
