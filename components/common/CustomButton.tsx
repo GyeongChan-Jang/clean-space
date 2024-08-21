@@ -46,11 +46,14 @@ const CustomButton = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={`w-full rounded-xl p-3 flex flex-row justify-center items-center shadow-md shadow-neutral-400/70 ${getBgVariantStyle(bgVariant)} ${className} ${disabled ? "opacity-50" : ""}`}
+      className={`w-full rounded-xl p-3 flex flex-row justify-center items-center shadow-md shadow-neutral-400/70 ${getBgVariantStyle(bgVariant)} ${className} ${disabled ? "opacity-40" : ""}`}
       {...props}
+      disabled={disabled}
     >
       {IconLeft && <IconLeft />}
-      <Text className={`text-lg font-bold ${getTextVariantStyle(textVariant)}`}>
+      <Text
+        className={`text-lg font-bold ${getTextVariantStyle(textVariant)} ${disabled ? "text-black" : ""}`}
+      >
         {title}
       </Text>
       {IconRight && <IconRight />}

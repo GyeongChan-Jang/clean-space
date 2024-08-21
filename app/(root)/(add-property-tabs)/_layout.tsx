@@ -61,6 +61,7 @@ const TabBar = () => {
         </TouchableOpacity>
         <CustomButton
           onPress={() => {
+            if (isNextDisabled) return;
             if (currentIndex < ROUTES.length - 1) {
               router.push(ROUTES[currentIndex + 1] as any);
             } else {

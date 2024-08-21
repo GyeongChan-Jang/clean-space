@@ -10,7 +10,8 @@ export interface AddPropertyState {
     size: number;
     rooms: number;
     bathrooms: number;
-    cleaningTime: [number, number];
+    cleaningTime: Date | null;
+    // cleaningTime: [number, number];
     cleaningDuration: number;
   };
   spaceLocation: AddPropertyAddress;
@@ -39,7 +40,7 @@ const useAddPropertyStore = create(
       size: 0,
       rooms: 0,
       bathrooms: 0,
-      cleaningTime: [0, 0],
+      cleaningTime: null,
       cleaningDuration: 0,
     },
     spaceLocation: {
@@ -91,8 +92,8 @@ const useAddPropertyStore = create(
             state.spaceInfo.size > 0 &&
             state.spaceInfo.rooms > 0 &&
             state.spaceInfo.bathrooms > 0 &&
-            state.spaceInfo.cleaningTime[0] > 0 &&
-            state.spaceInfo.cleaningTime[1] > 0 &&
+            // state.spaceInfo.cleaningTime[0] > 0 &&
+            // state.spaceInfo.cleaningTime[1] > 0 &&
             state.spaceInfo.cleaningDuration > 0
           );
         case "space-location-3":

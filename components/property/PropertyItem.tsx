@@ -22,7 +22,7 @@ const PropertyItem = ({
   onToggle,
 }: PropertyProps) => {
   return (
-    <View className="mb-5 bg-white rounded-2xl shadow-md overflow-hidden">
+    <View className="mb-5 bg-white rounded-2xl shadow-lg overflow-hidden">
       <View className="relative">
         <Image source={{ uri: image }} className="w-full h-48 rounded-t-2xl" />
         <View className="absolute top-3 left-3">
