@@ -1,11 +1,11 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-const CleaningNotes7 = () => {
+const CleaningTime8 = () => {
   return (
     <View>
-      <Text>CleaningNotes7</Text>
+      <Text>CleaningTime8</Text>
     </View>
   );
 };
-export default CleaningNotes7;
+export default CleaningTime8;

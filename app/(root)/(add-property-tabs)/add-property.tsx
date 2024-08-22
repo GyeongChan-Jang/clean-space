@@ -11,21 +11,24 @@ const AddProperty = () => {
 
   const steps = [
     {
-      title: "숙소 유형 선택",
-      description: "귀하의 숙소 유형을 선택해주세요.",
+      title: "공간 정보를 알려주세요",
+      description: "청소가 필요한 공간의 위치와 크기 등 기본정보를 알려주세요.",
     },
-    { title: "위치 정보", description: "숙소의 정확한 위치를 알려주세요." },
     {
-      title: "청소 정보",
-      description: "청소에 필요한 도구와 영역을 설정하세요.",
+      title: "청소 정보를 알려주세요",
+      description:
+        "청소 가이드라인을 작성하고 청소에 대한 요구사항을 입력해주세요.",
     },
-    { title: "가격 설정", description: "적절한 청소 가격을 설정해주세요." },
+    {
+      title: "등록을 완료하세요",
+      description: "적절한 청소 가격을 설정해주세요.",
+    },
   ];
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className="flex-1 p-6">
-        <Text className="text-3xl font-bold mb-6">숙소 등록하기</Text>
+        <Text className="text-3xl font-bold mb-6">공간 등록하기</Text>
         <Text className="text-lg mb-8">
           몇 가지 간단한 단계를 통해 귀하의 숙소를 등록하고 클리너를 찾아보세요.
         </Text>
@@ -44,7 +47,7 @@ const AddProperty = () => {
 
         <Image
           source={require("@/assets/images/building2.png")}
-          className="w-full h-48 rounded-lg mb-8"
+          className="w-full h-52 rounded-lg mb-8"
           resizeMode="cover"
         />
 

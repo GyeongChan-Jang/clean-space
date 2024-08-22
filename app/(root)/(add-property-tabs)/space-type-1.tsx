@@ -31,6 +31,10 @@ const SpaceType = () => {
   const { spaceType, setSpaceType } = useAddPropertyStore();
 
   const handleSelect = (id: string) => {
+    if (spaceType === id) {
+      setSpaceType("");
+      return;
+    }
     setSpaceType(id);
   };
 

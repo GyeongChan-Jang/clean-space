@@ -1,11 +1,11 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-const SpaceLocation3 = () => {
+const SpaceInfo4 = () => {
   return (
     <View>
-      <Text>SpaceLocation3</Text>
+      <Text>SpaceInfo4</Text>
     </View>
   );
 };
-export default SpaceLocation3;
+export default SpaceInfo4;
