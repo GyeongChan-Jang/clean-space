@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-import { AddPropertyAddress } from "@/types/property";
+import { AddPropertyRoutes } from "@/constants/routes";
+import { AddPropertyAddress, CleaningAmenity } from "@/types/property";
 
 export interface AddPropertyState {
   spaceType: string;
@@ -16,6 +17,7 @@ export interface AddPropertyState {
     // cleaningTime: [Date, Date] | null;
     // cleaningDuration: number;
   };
+  cleaningAmenities: CleaningAmenity[];
   // spaceInfo: {
   //   name: string;
   //   size: number;
@@ -33,6 +35,7 @@ export interface AddPropertyState {
   setSpaceType: (type: string) => void;
   setSpaceLocation: (location: AddPropertyAddress) => void;
   setSpaceDetails: (details: Partial<AddPropertyState["spaceDetails"]>) => void;
+  setCleaningAmenities: (amenities: CleaningAmenity[]) => void;
   // setSpaceInfo: (info: Partial<AddPropertyState["spaceInfo"]>) => void;
   // setCleaningTools: (tools: string[]) => void;
   // setCleaningGuideLine: (areas: string[]) => void;
@@ -68,6 +71,7 @@ const useAddPropertyStore = create(
       beds: 0,
       bathrooms: 0,
     },
+    cleaningAmenities: [],
     // cleaningTools: [],
     // cleaningAreas: [],
     // cleaningGuideline: [],
@@ -83,6 +87,7 @@ const useAddPropertyStore = create(
       set((state) => ({
         spaceDetails: { ...state.spaceDetails, ...details },
       })),
+    setCleaningAmenities: (amenities) => set({ cleaningAmenities: amenities }),
     // setSpaceInfo: (info) =>
     //   set((state) => ({
     //     spaceInfo: { ...state.spaceInfo, ...info },
@@ -100,17 +105,19 @@ const useAddPropertyStore = create(
       const state = get();
 
       switch (routeName) {
-        case "space-type-1":
+        case AddPropertyRoutes.SPACE_TYPE_1:
           return state.spaceType !== "";
-        case "space-location-2":
+        case AddPropertyRoutes.SPACE_LOCATION_2:
           return state.spaceLocation.address !== "";
-        case "space-details-3":
+        case AddPropertyRoutes.SPACE_DETAILS_3:
           return (
             state.spaceDetails.name !== "" &&
             state.spaceDetails.size > 0 &&
             state.spaceDetails.rooms > 0 &&
             state.spaceDetails.bathrooms > 0
           );
+        case AddPropertyRoutes.CLEANING_AMENITIES_4:
+          return state.cleaningAmenities.length > 0;
         default:
           return false;
 

@@ -103,7 +103,7 @@ const SpaceLocation = () => {
                 setSpaceLocation({ ...spaceLocation, addressDetail: text })
               }
               placeholder="상세 주소를 입력하세요"
-              className="border border-gray-300 rounded-lg p-3 text-lg"
+              className=" border border-gray-300 rounded-lg p-3 text-lg"
             />
           </View>
         )}

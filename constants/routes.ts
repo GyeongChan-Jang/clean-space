@@ -3,12 +3,11 @@ const AddPropertyRoutes = {
   SPACE_TYPE_1: "space-type-1",
   SPACE_LOCATION_2: "space-location-2",
   SPACE_DETAILS_3: "space-details-3",
-  SPACE_INFO_4: "space-info-4",
-  CLEANING_AMENITIES_5: "cleaning-amenities-5",
-  CLEANING_AREAS_6: "cleaning-areas-6",
-  CLEANING_GUIDELINES_7: "cleaning-guidelines-7",
-  CLEANING_TIME_8: "cleaning-time-8",
-  REGISTRATION_PRICE_9: "registration-price-9",
+  CLEANING_AMENITIES_4: "cleaning-amenities-4",
+  CLEANING_AREAS_5: "cleaning-areas-5",
+  CLEANING_GUIDELINES_6: "cleaning-guidelines-6",
+  CLEANING_TIME_7: "cleaning-time-7",
+  REGISTRATION_PRICE_8: "registration-price-8",
   COMPLETE: "complete",
 } as const;
 

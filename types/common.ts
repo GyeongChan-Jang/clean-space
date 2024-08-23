@@ -1,4 +1,4 @@
-import { TouchableOpacityProps } from "react-native";
+import { ImageSourcePropType, TouchableOpacityProps } from "react-native";
 
 type ThemeMode = "light" | "dark";
 
@@ -9,6 +9,14 @@ interface ButtonProps extends TouchableOpacityProps {
   IconLeft?: React.ComponentType<any>;
   IconRight?: React.ComponentType<any>;
   className?: string;
+  isLoading?: boolean;
+  isShadow?: boolean;
 }
 
-export type { ThemeMode, ButtonProps };
+interface SelectCardType {
+  id: string;
+  name: string;
+  image: ImageSourcePropType;
+}
+
+export type { ThemeMode, ButtonProps, SelectCardType };

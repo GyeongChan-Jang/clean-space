@@ -1,8 +1,6 @@
-interface PropertyType {
-  id: string;
-  type: string;
-  icon: string;
-}
+import { SelectCardType } from "@/types/common";
+
+interface PropertyType extends SelectCardType {}
 
 interface AddPropertyAddress {
   address: string;
@@ -20,10 +18,12 @@ interface AddPropertyAddress {
   };
 }
 
+interface CleaningAmenity extends SelectCardType {}
+
 interface PropertyNote {
   images: string[];
   description: string;
   cleaningNotes: string;
 }
 
-export type { PropertyType, AddPropertyAddress, PropertyNote };
+export type { PropertyType, AddPropertyAddress, PropertyNote, CleaningAmenity };
