@@ -11,7 +11,9 @@ import userStore from "@/store/userStore";
 const Profile = () => {
   const { user } = userStore();
 
-  const onCardPress = () => {};
+  const onCardPress = () => {
+    router.push("/(add-property-tabs)/space-type-1");
+  };
 
   const onPropertyPress = (itemId: string) => {
     if (itemId === "1") {

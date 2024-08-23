@@ -1,3 +1,4 @@
+import { ImagePickerAsset } from "expo-image-picker/src/ImagePicker.types";
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
@@ -7,6 +8,11 @@ import {
   CleaningAmenity,
   CleaningPlaces,
 } from "@/types/property";
+
+export interface CleaningGuidelineImage {
+  image: ImagePickerAsset;
+  description: string;
+}
 
 export interface AddPropertyState {
   spaceType: string;
@@ -21,12 +27,18 @@ export interface AddPropertyState {
   };
   cleaningAmenities: CleaningAmenity[];
   cleaningPlaces: CleaningPlaces[];
+  cleaningGuidelines: CleaningGuidelineImage[];
 
   setSpaceType: (type: string) => void;
   setSpaceLocation: (location: AddPropertyAddress) => void;
   setSpaceDetails: (details: Partial<AddPropertyState["spaceDetails"]>) => void;
   setCleaningAmenities: (amenities: CleaningAmenity[]) => void;
   setCleaningPlaces: (places: CleaningPlaces[]) => void;
+  setCleaningGuidelines: (guidelines: CleaningGuidelineImage[]) => void;
+  updateCleaningGuidelineDescription: (
+    index: number,
+    description: string,
+  ) => void;
 
   isStepValid: (routeName: string) => boolean;
 }
@@ -59,6 +71,7 @@ const useAddPropertyStore = create(
     },
     cleaningAmenities: [],
     cleaningPlaces: [],
+    cleaningGuidelines: [],
 
     setSpaceType: (spaceType) => set({ spaceType }),
     setSpaceLocation: (location) => set({ spaceLocation: location }),
@@ -68,6 +81,14 @@ const useAddPropertyStore = create(
       })),
     setCleaningAmenities: (amenities) => set({ cleaningAmenities: amenities }),
     setCleaningPlaces: (places) => set({ cleaningPlaces: places }),
+    setCleaningGuidelines: (guidelines) =>
+      set({ cleaningGuidelines: guidelines }),
+    updateCleaningGuidelineDescription: (index, description) =>
+      set((state) => ({
+        cleaningGuidelines: state.cleaningGuidelines.map((guideline, i) =>
+          i === index ? { ...guideline, description } : guideline,
+        ),
+      })),
 
     isStepValid: (routeName: string) => {
       const state = get();
@@ -88,6 +109,13 @@ const useAddPropertyStore = create(
           return state.cleaningAmenities.length > 0;
         case AddPropertyRoutes.CLEANING_PLACES_5:
           return state.cleaningPlaces.length > 0;
+        case AddPropertyRoutes.CLEANING_GUIDELINES_6:
+          return (
+            state.cleaningGuidelines.length >= 5 &&
+            state.cleaningGuidelines.every(
+              (guideline) => guideline.description.trim() !== "",
+            )
+          );
         default:
           return false;
       }

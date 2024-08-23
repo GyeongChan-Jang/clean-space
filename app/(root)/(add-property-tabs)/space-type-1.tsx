@@ -6,7 +6,7 @@ import SelectCard from "@/components/common/SelectCard";
 import useAddPropertyStore from "@/store/useAddProperty";
 import { PropertyType } from "@/types/property";
 
-const propertyTypes: PropertyType[] = [
+export const propertyTypes: PropertyType[] = [
   {
     id: "1",
     name: "주택",
