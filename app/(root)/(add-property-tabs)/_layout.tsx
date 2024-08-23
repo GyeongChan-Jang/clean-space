@@ -47,7 +47,7 @@ const TabBar = () => {
       <View className="flex-row justify-between items-center p-4">
         <TouchableOpacity
           onPress={() => {
-            if (currentIndex > 0) {
+            if (currentIndex > 1) {
               router.push(ROUTES[currentIndex - 1] as any);
             } else {
               router.push("/my-property");
