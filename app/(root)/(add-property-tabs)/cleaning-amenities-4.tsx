@@ -47,7 +47,7 @@ const amenities: CleaningAmenity[] = [
 const CleaningAmenities = () => {
   const { cleaningAmenities, setCleaningAmenities } = useAddPropertyStore();
 
-  const toggleAmenity = (amenity: CleaningAmenity) => {
+  const onSelectAmenities = (amenity: CleaningAmenity) => {
     if (cleaningAmenities.some((item) => item.id === amenity.id)) {
       setCleaningAmenities(
         cleaningAmenities.filter((item) => item.id !== amenity.id),
@@ -56,8 +56,6 @@ const CleaningAmenities = () => {
     }
     setCleaningAmenities([...cleaningAmenities, amenity]);
   };
-
-  console.log(cleaningAmenities);
 
   return (
     <SafeAreaView className="bg-white">
@@ -78,7 +76,7 @@ const CleaningAmenities = () => {
               isSelected={cleaningAmenities.some(
                 (item) => item.id === amenity.id,
               )}
-              onSelect={() => toggleAmenity(amenity)}
+              onSelect={() => onSelectAmenities(amenity)}
             />
           ))}
         </View>

@@ -26,4 +26,12 @@ interface PropertyNote {
   cleaningNotes: string;
 }
 
-export type { PropertyType, AddPropertyAddress, PropertyNote, CleaningAmenity };
+interface CleaningPlaces extends SelectCardType {}
+
+export type {
+  PropertyType,
+  AddPropertyAddress,
+  PropertyNote,
+  CleaningAmenity,
+  CleaningPlaces,
+};

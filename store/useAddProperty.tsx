@@ -2,7 +2,11 @@ import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
 import { AddPropertyRoutes } from "@/constants/routes";
-import { AddPropertyAddress, CleaningAmenity } from "@/types/property";
+import {
+  AddPropertyAddress,
+  CleaningAmenity,
+  CleaningPlaces,
+} from "@/types/property";
 
 export interface AddPropertyState {
   spaceType: string;
@@ -14,34 +18,16 @@ export interface AddPropertyState {
     rooms: number;
     beds: number;
     bathrooms: number;
-    // cleaningTime: [Date, Date] | null;
-    // cleaningDuration: number;
   };
   cleaningAmenities: CleaningAmenity[];
-  // spaceInfo: {
-  //   name: string;
-  //   size: number;
-  //   rooms: number;
-  //   bathrooms: number;
-  //   // cleaningTime: [Date, Date] | null;
-  //   // cleaningDuration: number;
-  // };
-  // cleaningTools: string[];
-  // cleaningAreas: string[];
-  // cleaningGuideline: any[];
-  // cleaningNotes: PropertyNote;
-  // cleaningPrice: number;
+  cleaningPlaces: CleaningPlaces[];
 
   setSpaceType: (type: string) => void;
   setSpaceLocation: (location: AddPropertyAddress) => void;
   setSpaceDetails: (details: Partial<AddPropertyState["spaceDetails"]>) => void;
   setCleaningAmenities: (amenities: CleaningAmenity[]) => void;
-  // setSpaceInfo: (info: Partial<AddPropertyState["spaceInfo"]>) => void;
-  // setCleaningTools: (tools: string[]) => void;
-  // setCleaningGuideLine: (areas: string[]) => void;
-  // setCleaningAreas: (photos: string[]) => void;
-  // setCleaningNotes: (notes: PropertyNote) => void;
-  // setCleaningPrice: (price: number) => void;
+  setCleaningPlaces: (places: CleaningPlaces[]) => void;
+
   isStepValid: (routeName: string) => boolean;
 }
 
@@ -72,15 +58,8 @@ const useAddPropertyStore = create(
       bathrooms: 0,
     },
     cleaningAmenities: [],
-    // cleaningTools: [],
-    // cleaningAreas: [],
-    // cleaningGuideline: [],
-    // cleaningNotes: {
-    //   images: [],
-    //   description: "",
-    //   cleaningNotes: "",
-    // },
-    // cleaningPrice: 0,
+    cleaningPlaces: [],
+
     setSpaceType: (spaceType) => set({ spaceType }),
     setSpaceLocation: (location) => set({ spaceLocation: location }),
     setSpaceDetails: (details) =>
@@ -88,19 +67,8 @@ const useAddPropertyStore = create(
         spaceDetails: { ...state.spaceDetails, ...details },
       })),
     setCleaningAmenities: (amenities) => set({ cleaningAmenities: amenities }),
-    // setSpaceInfo: (info) =>
-    //   set((state) => ({
-    //     spaceInfo: { ...state.spaceInfo, ...info },
-    //   })),
-    // setSpaceLocation: (newLocation) =>
-    //   set((state) => ({
-    //     spaceLocation: { ...state.spaceLocation, ...newLocation },
-    //   })),
-    // setCleaningTools: (tools) => set({ cleaningTools: tools }),
-    // setCleaningAreas: (areas) => set({ cleaningAreas: areas }),
-    // setCleaningGuideLine: (cleaningGuideline) => set({ cleaningGuideline }),
-    // setCleaningNotes: (cleaningNotes) => set({ cleaningNotes }),
-    // setCleaningPrice: (cleaningPrice) => set({ cleaningPrice }),
+    setCleaningPlaces: (places) => set({ cleaningPlaces: places }),
+
     isStepValid: (routeName: string) => {
       const state = get();
 
@@ -118,32 +86,10 @@ const useAddPropertyStore = create(
           );
         case AddPropertyRoutes.CLEANING_AMENITIES_4:
           return state.cleaningAmenities.length > 0;
+        case AddPropertyRoutes.CLEANING_PLACES_5:
+          return state.cleaningPlaces.length > 0;
         default:
           return false;
-
-        // case "space-info-2":
-        //   return (
-        //     state.spaceInfo.size > 0 &&
-        //     state.spaceInfo.rooms > 0 &&
-        //     state.spaceInfo.bathrooms > 0
-        //     // state.spaceInfo.cleaningTime[0] > 0 &&
-        //     // state.spaceInfo.cleaningTime[1] > 0 &&
-        //     // state.spaceInfo.cleaningDuration > 0
-        //   );
-        // case "space-location-3":
-        //   return state.spaceLocation.address !== "";
-        // case "cleaning-tools-4":
-        //   return state.cleaningTools.length > 0;
-        // case "cleaning-areas-5":
-        //   return state.cleaningAreas.length > 0;
-        // case "cleaning-guideline-6":
-        //   return state.cleaningGuideline.length > 0;
-        // case "cleaning-notes-7":
-        //   return state.cleaningNotes.cleaningNotes !== "";
-        // case "cleaning-price-8":
-        //   return state.cleaningPrice > 0;
-        // default:
-        //   return false;
       }
     },
   })),
