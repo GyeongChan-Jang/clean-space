@@ -1,97 +1,65 @@
-import * as ImagePicker from "expo-image-picker";
-import React from "react";
-import {
-  Dimensions,
-  Image,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import * as ImagePicker from 'expo-image-picker'
+import React from 'react'
+import { Dimensions, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { propertyTypes } from "@/app/(root)/(add-property-tabs)/space-type-1";
-import useAddPropertyStore from "@/store/useAddProperty";
+import { propertyTypes } from '@/app/(root)/(add-property-tabs)/space-type-1'
+import useAddPropertyStore from '@/store/useAddProperty'
 
 interface InitialCleaningGuidelinesProps {
-  pickImages: () => void;
+  pickImages: () => void
 }
 
 interface ImageGridProps {
-  guidelines: { image: ImagePicker.ImageInfo; description: string }[];
-  pickImages: () => void;
-  updateDescription: (index: number, description: string) => void;
+  guidelines: { image: ImagePicker.ImageInfo; description: string }[]
+  pickImages: () => void
+  updateDescription: (index: number, description: string) => void
 }
 
-const InitialCleaningGuidelines = ({
-  pickImages,
-}: InitialCleaningGuidelinesProps) => {
-  const { spaceType } = useAddPropertyStore();
+const InitialCleaningGuidelines = ({ pickImages }: InitialCleaningGuidelinesProps) => {
+  const { spaceType } = useAddPropertyStore()
   return (
     <View>
       <Text className="text-2xl font-bold mt-6 mb-4">
-        {propertyTypes.find((type) => type.id === spaceType)?.name} 청소
-        가이드라인 추가하기
+        {propertyTypes.find((type) => type.id === spaceType)?.name} 청소 가이드라인 추가하기
       </Text>
-      <Text className="text-gray-500 mb-2">
-        청소 가이드라인은 사진과 설명을 통해 클리너에게 보여집니다.
-      </Text>
-      <Text className="text-gray-500 mb-2">
-        가이드라인은 최소 5장 이상의 사진과 설명을 입력해야합니다.
-      </Text>
-      <Text className="text-gray-500 mb-6">
-        첫번째 사진이 숙소의 대표 사진으로 등록됩니다.
-      </Text>
+      <Text className="text-gray-500 mb-2">청소 가이드라인은 사진과 설명을 통해 클리너에게 보여집니다.</Text>
+      <Text className="text-gray-500 mb-2">가이드라인은 최소 5장 이상의 사진과 설명을 입력해야합니다.</Text>
+      <Text className="text-gray-500 mb-6">첫번째 사진이 숙소의 대표 사진으로 등록됩니다.</Text>
 
       <TouchableOpacity className="mb-4" onPress={pickImages}>
         <View className="flex-row px-4 justify-start items-center py-4 rounded-xl border border-secondary-400">
-          <Image
-            className="w-5 h-5 mr-4"
-            source={require("@/assets/icons/common/plus.png")}
-          />
+          <Image className="w-5 h-5 mr-4" source={require('@/assets/icons/common/plus.png')} />
           <Text className="text-lg font-Pretendard">사진 추가하기</Text>
         </View>
       </TouchableOpacity>
 
       <TouchableOpacity className="mb-4">
         <View className="flex-row px-4 justify-start items-center py-4 rounded-xl border border-secondary-400">
-          <Image
-            className="w-5 h-5 mr-4"
-            source={require("@/assets/icons/common/plus.png")}
-          />
+          <Image className="w-5 h-5 mr-4" source={require('@/assets/icons/common/plus.png')} />
           <Text className="text-lg font-Pretendard">사진 새로 찍기</Text>
         </View>
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
-const ImageGrid = ({
-  guidelines,
-  pickImages,
-  updateDescription,
-}: ImageGridProps) => {
-  const screenWidth = Dimensions.get("window").width;
-  const imageWidth = screenWidth - 48; // 48 is total horizontal padding
-  const imageHeight = (imageWidth / 16) * 9; // 16:9 ratio
+const ImageGrid = ({ guidelines, pickImages, updateDescription }: ImageGridProps) => {
+  const screenWidth = Dimensions.get('window').width
+  const imageWidth = screenWidth - 48 // 48 is total horizontal padding
+  const imageHeight = (imageWidth / 16) * 9 // 16:9 ratio
 
   return (
     <View className="mt-4">
       {/* Description and Add Button */}
       <View className="flex-row justify-between items-center mb-4">
-        <Text className="text-base font-semibold">
-          5장 이상의 사진을 선택하세요.
-        </Text>
+        <Text className="text-base font-semibold">5장 이상의 사진을 선택하세요.</Text>
         <TouchableOpacity
           onPress={pickImages}
-          className="flex-row items-center"
+          className="flex-row items-center bg-secondary-200 rounded-full px-2 py-1"
         >
-          <Image
-            className="w-5 h-5 mr-2"
-            source={require("@/assets/icons/common/plus.png")}
-          />
-          <Text className="text-base text-primary-500">추가</Text>
+          <Image className="w-[14px] h-[14px] mr-2" source={require('@/assets/icons/common/plus.png')} />
+          <Text className="text-sm pb-[1px]">추가</Text>
         </TouchableOpacity>
       </View>
 
@@ -104,7 +72,7 @@ const ImageGrid = ({
               style={{
                 width: imageWidth,
                 height: imageHeight,
-                borderRadius: 8,
+                borderRadius: 8
               }}
               resizeMode="cover"
             />
@@ -118,7 +86,7 @@ const ImageGrid = ({
             value={guideline.description}
             onChangeText={(text) => updateDescription(index, text)}
             placeholder={`${index + 1}. 사진에 대한 설명을 입력하세요.`}
-            className="border border-gray-300 rounded-md p-2 mt-2"
+            className="border-gray-300 rounded-md p-2 mt-2 border-b"
             multiline
           />
         </View>
@@ -130,45 +98,39 @@ const ImageGrid = ({
           className="border-2 border-dashed border-gray-300 rounded-lg justify-center items-center"
           style={{ width: imageWidth, height: imageHeight }}
         >
-          <Image
-            className="w-8 h-8 mb-2"
-            source={require("@/assets/icons/common/plus.png")}
-          />
+          <Image className="w-8 h-8 mb-2" source={require('@/assets/icons/common/plus.png')} />
           <Text className="text-sm text-gray-500">추가하기</Text>
         </View>
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
 const CleaningGuidelines = () => {
-  const {
-    spaceType,
-    cleaningGuidelines,
-    setCleaningGuidelines,
-    updateCleaningGuidelineDescription,
-  } = useAddPropertyStore();
+  const { spaceType, cleaningGuidelines, setCleaningGuidelines, updateCleaningGuidelineDescription } =
+    useAddPropertyStore()
 
   const pickImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       aspect: [3, 4],
-      quality: 1,
-    });
+      quality: 1
+    })
 
     if (!result.canceled) {
-      const newGuidelines = result.assets.map((asset) => ({
+      const newGuidelines = result.assets.map((asset, index) => ({
+        id: index,
         image: asset,
-        description: "",
-      }));
-      setCleaningGuidelines([...cleaningGuidelines, ...newGuidelines]);
+        description: ''
+      }))
+      setCleaningGuidelines([...cleaningGuidelines, ...newGuidelines])
     }
-  };
+  }
 
   const updateDescription = (index: number, description: string) => {
-    updateCleaningGuidelineDescription(index, description);
-  };
+    updateCleaningGuidelineDescription(index, description)
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -176,15 +138,11 @@ const CleaningGuidelines = () => {
         {cleaningGuidelines.length === 0 ? (
           <InitialCleaningGuidelines pickImages={pickImages} />
         ) : (
-          <ImageGrid
-            guidelines={cleaningGuidelines}
-            pickImages={pickImages}
-            updateDescription={updateDescription}
-          />
+          <ImageGrid guidelines={cleaningGuidelines} pickImages={pickImages} updateDescription={updateDescription} />
         )}
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default CleaningGuidelines;
+export default CleaningGuidelines
