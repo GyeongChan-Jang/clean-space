@@ -12,7 +12,7 @@ const ROUTES = Object.values(AddPropertyRoutes)
 const ProgressBar = ({ currentIndex }: { currentIndex: number }) => {
   return (
     <View className="flex-row h-1">
-      {ROUTES.slice(1, -1).map((_, index) => (
+      {ROUTES.slice(1).map((_, index) => (
         <View key={index} className={`flex-1 ${index <= currentIndex ? 'bg-sky-500' : 'bg-gray-200'}`} />
       ))}
     </View>
