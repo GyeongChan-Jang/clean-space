@@ -22,7 +22,7 @@ const PropertyLocationScreen = () => {
 
   const handleComplete = async (data: OnCompleteParams) => {
     const fullAddress = data.address + (data.buildingName ? ` (${data.buildingName})` : '')
-
+    if (!propertyLocation) return
     const newLocation: AddPropertyAddress = {
       ...propertyLocation,
       address: fullAddress,
@@ -132,17 +132,17 @@ const PropertyLocationScreen = () => {
             className="flex-row items-center border border-gray-300 rounded-lg p-3"
           >
             <Ionicons name="search-outline" size={24} color="#4b5563" />
-            <Text className={`ml-3 flex-1 ${propertyLocation.address ? 'text-black' : 'text-gray-400'} text-lg`}>
-              {propertyLocation.address || '주소를 검색하세요'}
+            <Text className={`ml-3 flex-1 ${propertyLocation?.address ? 'text-black' : 'text-gray-400'} text-lg`}>
+              {propertyLocation?.address || '주소를 검색하세요'}
             </Text>
           </TouchableOpacity>
         </View>
 
-        {propertyLocation.address && (
+        {propertyLocation?.address && (
           <View className="mb-6">
             <Text className="text-xl font-PretendardBold mb-2">상세 주소</Text>
             <TextInput
-              value={propertyLocation.addressDetail}
+              value={propertyLocation?.addressDetail}
               onChangeText={(text) => setPropertyLocation({ ...propertyLocation, addressDetail: text })}
               placeholder="상세 주소를 입력하세요"
               className=" border border-gray-300 rounded-lg p-3 text-base"
@@ -150,12 +150,14 @@ const PropertyLocationScreen = () => {
           </View>
         )}
 
-        {propertyLocation.address && (
+        {propertyLocation?.address && (
           <View className="mt-2">
             <Text className="text-xl font-PretendardBold mb-2">입력한 주소</Text>
             <View className="bg-gray-100 rounded-lg p-4">
-              <Text className="text-lg">{propertyLocation.address}</Text>
-              {propertyLocation.addressDetail && <Text className="text-lg mt-2">{propertyLocation.addressDetail}</Text>}
+              <Text className="text-lg">{propertyLocation?.address}</Text>
+              {propertyLocation?.addressDetail && (
+                <Text className="text-lg mt-2">{propertyLocation?.addressDetail}</Text>
+              )}
             </View>
           </View>
         )}

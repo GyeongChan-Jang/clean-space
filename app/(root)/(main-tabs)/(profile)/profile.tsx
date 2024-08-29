@@ -1,34 +1,34 @@
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import React from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { FontAwesome, Ionicons } from '@expo/vector-icons'
+import { router } from 'expo-router'
+import React from 'react'
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { CompoundList } from "@/components/common/CompoundList";
-import AddPropertyCard from "@/components/property/AddPropertyCard";
-import userStore from "@/store/userStore";
+import { CompoundList } from '@/components/common/CompoundList'
+import AddPropertyCard from '@/components/property/AddPropertyCard'
+import userStore from '@/store/userStore'
+import { AddPropertyRoutes } from '@/constants/routes'
 
 const Profile = () => {
-  const { user } = userStore();
+  const { user } = userStore()
 
   const onCardPress = () => {
-    router.push("/(add-property-tabs)/space-type-1");
-  };
+    // router.push(`/${AddPropertyRoutes.ADD_PROPERTY}`)
+    router.push(`/${AddPropertyRoutes.COMPLETE}`)
+  }
 
   const onPropertyPress = (itemId: string) => {
-    if (itemId === "1") {
-      router.push("/(profile)/my-property");
+    if (itemId === '1') {
+      router.push('/(profile)/my-property')
     }
-  };
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView className="flex-1 px-5">
         {/* 헤더 */}
         <View className="flex-row justify-between items-center py-9">
-          <Text className="text-3xl font-PretendardBold text-secondary-900">
-            프로필
-          </Text>
+          <Text className="text-3xl font-PretendardBold text-secondary-900">프로필</Text>
           <Ionicons name="notifications-outline" size={32} color="#333333" />
         </View>
 
@@ -39,19 +39,13 @@ const Profile = () => {
               <Image
                 className="w-full h-full rounded-full"
                 source={
-                  user?.profile_image
-                    ? { uri: user.profile_image }
-                    : require("@/assets/icons/profile-default.png")
+                  user?.profile_image ? { uri: user.profile_image } : require('@/assets/icons/profile-default.png')
                 }
               />
             </View>
             <View className="justify-center gap-1">
-              <Text className="text-xl font-PretendardBold text-secondary-900">
-                {user?.name}
-              </Text>
-              <Text className="font-Pretendard text-secondary-700">
-                프로필 보기
-              </Text>
+              <Text className="text-xl font-PretendardBold text-secondary-900">{user?.name}</Text>
+              <Text className="font-Pretendard text-secondary-700">프로필 보기</Text>
             </View>
           </View>
           <FontAwesome name="angle-right" size={30} color="#333333" />
@@ -63,16 +57,11 @@ const Profile = () => {
         <AddPropertyCard
           onPress={onCardPress}
           title="당신의 숙소를 청소하세요."
-          description={[
-            "간단히 숙소를 등록하고",
-            "숙소 청소 클리너를 모집하세요.",
-          ]}
+          description={['간단히 숙소를 등록하고', '숙소 청소 클리너를 모집하세요.']}
         />
 
         <View className="mt-5 mb-2.5">
-          <Text className="text-xl font-PretendardBold text-secondary-900">
-            나의 정보
-          </Text>
+          <Text className="text-xl font-PretendardBold text-secondary-900">나의 정보</Text>
         </View>
 
         {/* 나의 정보 */}
@@ -86,7 +75,7 @@ const Profile = () => {
         </CompoundList>
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile

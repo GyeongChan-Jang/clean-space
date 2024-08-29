@@ -14,7 +14,7 @@ export interface CleaningGuideline {
 export interface AddPropertyState {
   propertyId: string
   propertyType: string
-  propertyLocation: AddPropertyAddress
+  propertyLocation: AddPropertyAddress | null
   propertyDetails: {
     name: string
     description: string
@@ -42,6 +42,7 @@ export interface AddPropertyState {
   setCleaningGuidelines: (guidelines: CleaningGuideline[]) => void
   setCleaningTime: (time: Partial<AddPropertyState['cleaningTime']>) => void
   setCleaningPrice: (price: number) => void
+  setInitialState: () => void
 
   isStepValid: (routeName: string) => boolean
 }
@@ -100,6 +101,30 @@ const useAddPropertyStore = create(
       })),
     setCleaningPrice: (price) => set({ cleaningPrice: price }),
 
+    setInitialState: () =>
+      set({
+        propertyId: '',
+        propertyType: '',
+        propertyLocation: null,
+        propertyDetails: {
+          name: '',
+          description: '',
+          size: 0,
+          rooms: 0,
+          beds: 0,
+          bathrooms: 0
+        },
+        cleaningAmenities: [],
+        cleaningPlaces: [],
+        cleaningGuidelines: [],
+        cleaningTime: {
+          startTime: new Date(new Date().setHours(11, 0, 0, 0)),
+          endTime: new Date(new Date().setHours(13, 0, 0, 0)),
+          estimatedDuration: 120
+        },
+        cleaningPrice: 0
+      }),
+
     isStepValid: (routeName: string) => {
       const state = get()
 
@@ -107,7 +132,7 @@ const useAddPropertyStore = create(
         case AddPropertyRoutes.PROPERTY_TYPE_1:
           return state.propertyType !== ''
         case AddPropertyRoutes.PROPERTY_LOCATION_2:
-          return state.propertyLocation.address !== ''
+          return state.propertyLocation?.address !== ''
         case AddPropertyRoutes.PROPERTY_DETAILS_3:
           return (
             state.propertyDetails.name !== '' &&

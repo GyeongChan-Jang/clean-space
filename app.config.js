@@ -1,73 +1,70 @@
 export default () => {
   return {
     expo: {
-      name: "clean-space",
-      slug: "clean-space",
-      version: "1.0.0",
-      orientation: "portrait",
-      icon: "./assets/icons/icon.png",
-      scheme: "clean-space",
-      userInterfaceStyle: "automatic",
+      name: 'clean-space',
+      slug: 'clean-space',
+      version: '1.0.0',
+      orientation: 'portrait',
+      icon: './assets/icons/icon.png',
+      scheme: 'clean-space',
+      userInterfaceStyle: 'automatic',
       splash: {
-        image: "./assets/icons/splash-icon.gif",
-        resizeMode: "contain",
-        backgroundColor: "#ffffff",
+        image: './assets/icons/splash-icon.gif',
+        resizeMode: 'contain',
+        backgroundColor: '#ffffff'
       },
       ios: {
         supportsTablet: true,
-        bundleIdentifier: "com.cleanspace",
+        bundleIdentifier: 'com.cleanspace'
       },
       android: {
         adaptiveIcon: {
-          foregroundImage: "./assets/icons/adaptive-icon.png",
-          backgroundColor: "#ffffff",
+          foregroundImage: './assets/icons/adaptive-icon.png',
+          backgroundColor: '#ffffff'
         },
-        package: "com.cleanspace",
+        package: 'com.cleanspace'
       },
       web: {
-        bundler: "metro",
-        output: "static",
-        favicon: "./assets/icons/favicon.png",
+        bundler: 'metro',
+        output: 'static',
+        favicon: './assets/icons/favicon.png'
       },
       plugins: [
-        "expo-router",
+        'expo-router',
         [
-          "expo-build-properties",
+          'expo-build-properties',
           {
             android: {
-              extraMavenRepos: [
-                "https://devrepo.kakao.com/nexus/content/groups/public/",
-              ],
-              newArchEnabled: true,
+              extraMavenRepos: ['https://devrepo.kakao.com/nexus/content/groups/public/'],
+              newArchEnabled: true
             },
             ios: {
-              newArchEnabled: true,
-            },
-          },
+              newArchEnabled: true
+            }
+          }
         ],
         [
-          "@react-native-kakao/core",
+          '@react-native-kakao/core',
           {
             nativeAppKey: process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY,
             android: {
-              authCodeHandlerActivity: true,
+              authCodeHandlerActivity: true
             },
             ios: {
-              handleKakaoOpenUrl: true,
-            },
-          },
+              handleKakaoOpenUrl: true
+            }
+          }
         ],
         [
-          "expo-image-picker",
+          'expo-image-picker',
           {
-            photosPermission:
-              "The app accesses your photos to let you share them with your friends.",
-          },
-        ],
+            photosPermission: 'The app accesses your photos to let you share them with your friends.'
+          }
+        ]
       ],
       experiments: {
-        typedRoutes: true,
-      },
-    },
-  };
-};
+        typedRoutes: true
+      }
+    }
+  }
+}
