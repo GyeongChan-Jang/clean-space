@@ -13,8 +13,7 @@ const Profile = () => {
   const { user } = userStore()
 
   const onCardPress = () => {
-    // router.push(`/${AddPropertyRoutes.ADD_PROPERTY}`)
-    router.push(`/${AddPropertyRoutes.COMPLETE}`)
+    router.push(`/${AddPropertyRoutes.ADD_PROPERTY}`)
   }
 
   const onPropertyPress = (itemId: string) => {

@@ -29,18 +29,18 @@ const CompleteScreen = () => {
             autoPlay
             loop
             style={{
-              width: 200,
-              height: 200,
+              width: 250,
+              height: 250,
               marginBottom: 8
             }}
           />
           <Text className="text-3xl font-bold text-black mb-2">축하합니다!</Text>
-          <Text className="text-lg text-gray-700 mb-8 text-center">공간 등록이 완료되었습니다.</Text>
+          <Text className="text-lg text-gray-700 mb-8 text-center">숙소 등록이 완료되었습니다.</Text>
 
           <View>
             <View className="flex-row items-center mb-4">
               <MaterialCommunityIcons name="check-circle" size={24} color="#51b37f" className="mr-2" />
-              <Text className="text-base text-gray-700">공간 정보가 저장되었습니다.</Text>
+              <Text className="text-base text-gray-700">숙소 정보가 저장되었습니다.</Text>
             </View>
             <View className="flex-row items-center mb-4">
               <MaterialCommunityIcons name="check-circle" size={24} color="#51b37f" className="mr-2" />
