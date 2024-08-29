@@ -1,4 +1,9 @@
 import { Tabs, usePathname, useRouter } from 'expo-router'
+import {
+  BottomTabBarProps,
+  BottomTabNavigationEventMap,
+  BottomTabNavigationOptions
+} from '@react-navigation/bottom-tabs'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
@@ -6,6 +11,25 @@ import CustomButton from '@/components/common/CustomButton'
 import { AddPropertyRoutes } from '@/constants/routes'
 import useAddPropertyStore from '@/store/useAddProperty'
 import { heightPercentage } from '@/utils/responsive'
+import { NavigationHelpers, ParamListBase, RouteProp } from '@react-navigation/native'
+interface CustomTabOptions {
+  onNextPress?: () => void
+  // isNextDisabled?: boolean
+}
+
+// BottomTabNavigationOptions를 확장하여 커스텀 옵션 포함
+type ExtendedTabNavigationOptions = BottomTabNavigationOptions & CustomTabOptions
+
+// CustomTabBarProps 인터페이스 정의
+interface CustomTabBarProps extends Omit<BottomTabBarProps, 'descriptors'> {
+  descriptors: {
+    [key: string]: {
+      options: ExtendedTabNavigationOptions
+      route: RouteProp<ParamListBase, string>
+      navigation: any
+    }
+  }
+}
 
 const ROUTES = Object.values(AddPropertyRoutes)
 
@@ -19,10 +43,23 @@ const ProgressBar = ({ currentIndex }: { currentIndex: number }) => {
   )
 }
 
-const TabBar = () => {
+const TabBar = ({ state, descriptors, navigation }: CustomTabBarProps) => {
   const router = useRouter()
   const pathname = usePathname()
   const currentIndex = ROUTES.indexOf(pathname.split('/').pop() as AddPropertyRoutes)
+
+  const currentRoute = state.routes[state.index]
+  const { options } = descriptors[currentRoute.key]
+
+  const onNextPress =
+    options.onNextPress ||
+    (() => {
+      if (currentIndex < ROUTES.length - 1) {
+        router.push(ROUTES[currentIndex + 1] as any)
+      } else {
+        router.push('/my-property')
+      }
+    })
 
   const { isStepValid } = useAddPropertyStore()
   const currentRouteName = ROUTES[currentIndex]
@@ -50,17 +87,10 @@ const TabBar = () => {
           <Text className="text-center text-secondary-800 text-lg font-bold">뒤로</Text>
         </TouchableOpacity>
         <CustomButton
-          onPress={() => {
-            if (isNextDisabled) return
-            if (currentIndex < ROUTES.length - 1) {
-              router.push(ROUTES[currentIndex + 1] as any)
-            } else {
-              router.push('/my-property')
-            }
-          }}
+          onPress={onNextPress}
           title={currentIndex === ROUTES.length - 2 ? '완료' : '다음'}
           // bgVariant={isNextDisabled ? "secondary" : "primary"}
-          bgVariant={'secondary'}
+          bgVariant="secondary"
           textVariant="secondary"
           className="w-1/4 px-6 py-3 rounded-lg"
           disabled={isNextDisabled}
@@ -90,7 +120,7 @@ export default function Layout() {
       screenOptions={{
         headerShown: false
       }}
-      tabBar={() => (shouldShowTabBar() ? <TabBar /> : null)}
+      tabBar={(props) => (shouldShowTabBar() ? <TabBar {...(props as CustomTabBarProps)} /> : null)}
     >
       {ROUTES.map((route) => (
         <Tabs.Screen

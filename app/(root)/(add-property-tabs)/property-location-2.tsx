@@ -3,15 +3,19 @@ import { OnCompleteParams } from '@actbase/react-daum-postcode/lib/types'
 import { Ionicons } from '@expo/vector-icons'
 import BottomSheet from '@gorhom/bottom-sheet'
 import axios from 'axios'
-import React, { useMemo, useRef } from 'react'
-import { Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useMemo, useRef } from 'react'
+import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import useAddPropertyStore from '@/store/useAddProperty'
 import { AddPropertyAddress } from '@/types/property'
+import { supabase } from '@/lib/supabase'
+import { router, useNavigation } from 'expo-router'
+import { AddPropertyRoutes } from '@/constants/routes'
 
-const SpaceLocation = () => {
-  const { spaceLocation, setSpaceLocation } = useAddPropertyStore()
+const PropertyLocationScreen = () => {
+  const navigation = useNavigation()
+  const { propertyLocation, setPropertyLocation, propertyId } = useAddPropertyStore()
   const bottomSheetRef = useRef<BottomSheet>(null)
 
   const snapPoints = useMemo(() => ['25%', '50%', '90%'], [])
@@ -20,7 +24,7 @@ const SpaceLocation = () => {
     const fullAddress = data.address + (data.buildingName ? ` (${data.buildingName})` : '')
 
     const newLocation: AddPropertyAddress = {
-      ...spaceLocation,
+      ...propertyLocation,
       address: fullAddress,
       roadAddress: data.roadAddress,
       zoneCode: data.zonecode.toString(),
@@ -30,9 +34,10 @@ const SpaceLocation = () => {
       bcode: data.bcode
     }
 
-    setSpaceLocation(newLocation)
+    setPropertyLocation(newLocation)
     bottomSheetRef.current?.close()
-    await getCoordinates(fullAddress, newLocation)
+    const updatedLocation = await getCoordinates(fullAddress, newLocation)
+    if (updatedLocation) setPropertyLocation(updatedLocation)
   }
 
   const getCoordinates = async (address: string, newLocation: AddPropertyAddress) => {
@@ -55,7 +60,7 @@ const SpaceLocation = () => {
             longitude: parseFloat(x)
           }
         }
-        setSpaceLocation(updatedLocation)
+        return updatedLocation
       } else {
         console.log('No results found for the given address')
       }
@@ -63,6 +68,54 @@ const SpaceLocation = () => {
       console.error('Error fetching coordinates:', error)
     }
   }
+
+  const updatePropertyLocation = async () => {
+    const { coordinates, address, addressDetail, apartment, bcode, roadAddress, sido, sigungu, sigunguCode, zoneCode } =
+      propertyLocation
+
+    const point = `POINT(${coordinates.longitude} ${coordinates.latitude})`
+    const { error } = await supabase
+      .from('properties')
+      .update({
+        coordinates: point
+      })
+      .eq('property_id', propertyId)
+
+    const { error: errorAddress } = await supabase.from('property_address').insert({
+      property_id: propertyId,
+      address: address,
+      address_detail: addressDetail,
+      apartment: apartment,
+      bcode: bcode,
+      road_address: roadAddress,
+      sido: sido,
+      sigungu: sigungu,
+      sigungu_code: sigunguCode,
+      zonecode: zoneCode,
+      coordinates: point
+    })
+
+    if (error || errorAddress) {
+      console.log(error, errorAddress)
+      if (error) {
+        console.log('error', error)
+        Alert.alert('오류', '공간 위치 업데이트에 실패했습니다.')
+        return
+      }
+      if (errorAddress) {
+        console.log('errorAddress', errorAddress)
+        Alert.alert('오류', '공간 주소 업데이트에 실패했습니다.')
+        return
+      }
+    }
+    router.push(`/${AddPropertyRoutes.PROPERTY_DETAILS_3}`)
+  }
+
+  useEffect(() => {
+    navigation.setOptions({
+      onNextPress: updatePropertyLocation
+    })
+  }, [navigation, propertyLocation])
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -79,30 +132,30 @@ const SpaceLocation = () => {
             className="flex-row items-center border border-gray-300 rounded-lg p-3"
           >
             <Ionicons name="search-outline" size={24} color="#4b5563" />
-            <Text className={`ml-3 flex-1 ${spaceLocation.address ? 'text-black' : 'text-gray-400'} text-lg`}>
-              {spaceLocation.address || '주소를 검색하세요'}
+            <Text className={`ml-3 flex-1 ${propertyLocation.address ? 'text-black' : 'text-gray-400'} text-lg`}>
+              {propertyLocation.address || '주소를 검색하세요'}
             </Text>
           </TouchableOpacity>
         </View>
 
-        {spaceLocation.address && (
+        {propertyLocation.address && (
           <View className="mb-6">
             <Text className="text-xl font-PretendardBold mb-2">상세 주소</Text>
             <TextInput
-              value={spaceLocation.addressDetail}
-              onChangeText={(text) => setSpaceLocation({ ...spaceLocation, addressDetail: text })}
+              value={propertyLocation.addressDetail}
+              onChangeText={(text) => setPropertyLocation({ ...propertyLocation, addressDetail: text })}
               placeholder="상세 주소를 입력하세요"
               className=" border border-gray-300 rounded-lg p-3 text-base"
             />
           </View>
         )}
 
-        {spaceLocation.address && (
+        {propertyLocation.address && (
           <View className="mt-2">
             <Text className="text-xl font-PretendardBold mb-2">입력한 주소</Text>
             <View className="bg-gray-100 rounded-lg p-4">
-              <Text className="text-lg">{spaceLocation.address}</Text>
-              {spaceLocation.addressDetail && <Text className="text-lg mt-2">{spaceLocation.addressDetail}</Text>}
+              <Text className="text-lg">{propertyLocation.address}</Text>
+              {propertyLocation.addressDetail && <Text className="text-lg mt-2">{propertyLocation.addressDetail}</Text>}
             </View>
           </View>
         )}
@@ -126,4 +179,4 @@ const SpaceLocation = () => {
   )
 }
 
-export default SpaceLocation
+export default PropertyLocationScreen

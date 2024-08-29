@@ -5,16 +5,17 @@ import { subscribeWithSelector } from 'zustand/middleware'
 import { AddPropertyRoutes } from '@/constants/routes'
 import { AddPropertyAddress, CleaningAmenity, CleaningPlaces } from '@/types/property'
 
-export interface CleaningGuidelineImage {
+export interface CleaningGuideline {
   id: number
   image: ImagePickerAsset
   description: string
 }
 
 export interface AddPropertyState {
-  spaceType: string
-  spaceLocation: AddPropertyAddress
-  spaceDetails: {
+  propertyId: string
+  propertyType: string
+  propertyLocation: AddPropertyAddress
+  propertyDetails: {
     name: string
     description: string
     size: number
@@ -24,7 +25,7 @@ export interface AddPropertyState {
   }
   cleaningAmenities: CleaningAmenity[]
   cleaningPlaces: CleaningPlaces[]
-  cleaningGuidelines: CleaningGuidelineImage[]
+  cleaningGuidelines: CleaningGuideline[]
   cleaningTime: {
     startTime: Date
     endTime: Date
@@ -32,13 +33,13 @@ export interface AddPropertyState {
   }
   cleaningPrice: number
 
-  setSpaceType: (type: string) => void
-  setSpaceLocation: (location: AddPropertyAddress) => void
-  setSpaceDetails: (details: Partial<AddPropertyState['spaceDetails']>) => void
+  setPropertyId: (id: string) => void
+  setPropertyType: (type: string) => void
+  setPropertyLocation: (location: AddPropertyAddress) => void
+  setPropertyDetails: (details: Partial<AddPropertyState['propertyDetails']>) => void
   setCleaningAmenities: (amenities: CleaningAmenity[]) => void
   setCleaningPlaces: (places: CleaningPlaces[]) => void
-  setCleaningGuidelines: (guidelines: CleaningGuidelineImage[]) => void
-  updateCleaningGuidelineDescription: (index: number, description: string) => void
+  setCleaningGuidelines: (guidelines: CleaningGuideline[]) => void
   setCleaningTime: (time: Partial<AddPropertyState['cleaningTime']>) => void
   setCleaningPrice: (price: number) => void
 
@@ -47,8 +48,9 @@ export interface AddPropertyState {
 
 const useAddPropertyStore = create(
   subscribeWithSelector<AddPropertyState>((set, get) => ({
-    spaceType: '',
-    spaceLocation: {
+    propertyId: '',
+    propertyType: '',
+    propertyLocation: {
       address: '',
       addressDetail: '',
       apartment: '',
@@ -63,7 +65,7 @@ const useAddPropertyStore = create(
         longitude: 0
       }
     },
-    spaceDetails: {
+    propertyDetails: {
       name: '',
       description: '',
       size: 0,
@@ -80,22 +82,18 @@ const useAddPropertyStore = create(
       estimatedDuration: 120
     },
     cleaningPrice: 0,
+    onNextPress: null,
 
-    setSpaceType: (spaceType) => set({ spaceType }),
-    setSpaceLocation: (location) => set({ spaceLocation: location }),
-    setSpaceDetails: (details) =>
+    setPropertyId: (id: string) => set({ propertyId: id }),
+    setPropertyType: (propertyType) => set({ propertyType }),
+    setPropertyLocation: (location) => set({ propertyLocation: location }),
+    setPropertyDetails: (details) =>
       set((state) => ({
-        spaceDetails: { ...state.spaceDetails, ...details }
+        propertyDetails: { ...state.propertyDetails, ...details }
       })),
     setCleaningAmenities: (amenities) => set({ cleaningAmenities: amenities }),
     setCleaningPlaces: (places) => set({ cleaningPlaces: places }),
-    setCleaningGuidelines: (guidelines) => set({ cleaningGuidelines: guidelines }),
-    updateCleaningGuidelineDescription: (index, description) =>
-      set((state) => ({
-        cleaningGuidelines: state.cleaningGuidelines.map((guideline, i) =>
-          i === index ? { ...guideline, description } : guideline
-        )
-      })),
+    setCleaningGuidelines: (guidelines: CleaningGuideline[]) => set({ cleaningGuidelines: guidelines }),
     setCleaningTime: (time) =>
       set((state) => ({
         cleaningTime: { ...state.cleaningTime, ...time }
@@ -106,24 +104,24 @@ const useAddPropertyStore = create(
       const state = get()
 
       switch (routeName) {
-        case AddPropertyRoutes.SPACE_TYPE_1:
-          return state.spaceType !== ''
-        case AddPropertyRoutes.SPACE_LOCATION_2:
-          return state.spaceLocation.address !== ''
-        case AddPropertyRoutes.SPACE_DETAILS_3:
+        case AddPropertyRoutes.PROPERTY_TYPE_1:
+          return state.propertyType !== ''
+        case AddPropertyRoutes.PROPERTY_LOCATION_2:
+          return state.propertyLocation.address !== ''
+        case AddPropertyRoutes.PROPERTY_DETAILS_3:
           return (
-            state.spaceDetails.name !== '' &&
-            state.spaceDetails.size > 0 &&
-            state.spaceDetails.rooms > 0 &&
-            state.spaceDetails.bathrooms > 0
+            state.propertyDetails.name !== '' &&
+            state.propertyDetails.size > 0 &&
+            state.propertyDetails.rooms > 0 &&
+            state.propertyDetails.bathrooms > 0
           )
         case AddPropertyRoutes.CLEANING_AMENITIES_4:
           return state.cleaningAmenities.length > 0
-        case AddPropertyRoutes.CLEANING_PLACES_5:
+        case AddPropertyRoutes.CLEANING_LIST_5:
           return state.cleaningPlaces.length > 0
         case AddPropertyRoutes.CLEANING_GUIDELINES_6:
           return (
-            state.cleaningGuidelines.length >= 5 &&
+            state.cleaningGuidelines.length >= 1 &&
             state.cleaningGuidelines.every((guideline) => guideline.description.trim() !== '')
           )
         case AddPropertyRoutes.CLEANING_TIME_7:

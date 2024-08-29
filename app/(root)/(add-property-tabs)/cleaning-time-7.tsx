@@ -1,15 +1,20 @@
-import React, { useRef } from 'react'
-import { Text, View, TouchableOpacity, StyleSheet, Animated } from 'react-native'
+import React, { useEffect, useRef } from 'react'
+import { Text, View, TouchableOpacity, StyleSheet, Animated, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker'
 import { Ionicons } from '@expo/vector-icons'
 import useAddPropertyStore from '@/store/useAddProperty'
+import { router, useNavigation } from 'expo-router'
+import { supabase } from '@/lib/supabase'
+import { AddPropertyRoutes } from '@/constants/routes'
+import { formatToTime } from '@/utils/date'
 
-const CleaningTime: React.FC = () => {
+const CleaningTime = () => {
+  const navigation = useNavigation()
   const [showPicker, setShowPicker] = React.useState<boolean>(false)
   const [currentEditingTime, setCurrentEditingTime] = React.useState<'start' | 'end'>('start')
   const scaleAnim = useRef(new Animated.Value(1)).current
-  const { cleaningTime, setCleaningTime } = useAddPropertyStore()
+  const { cleaningTime, setCleaningTime, propertyId } = useAddPropertyStore()
 
   const animateChange = () => {
     Animated.sequence([
@@ -76,6 +81,32 @@ const CleaningTime: React.FC = () => {
       animateChange()
     }
   }
+
+  const updateCleaningTime = async () => {
+    const { startTime, endTime, estimatedDuration } = useAddPropertyStore.getState().cleaningTime
+    try {
+      await supabase
+        .from('properties')
+        .update({
+          cleaning_start_time: formatToTime(startTime),
+          cleaning_end_time: formatToTime(endTime),
+          cleaning_estimated_time: estimatedDuration
+        })
+        .eq('property_id', propertyId)
+
+      router.push(`/${AddPropertyRoutes.REGISTRATION_PRICE_8}`)
+    } catch (error) {
+      console.error(error)
+      Alert.alert('오류', '청소 시간 업데이트 중 오류가 발생했습니다.')
+      return
+    }
+  }
+
+  useEffect(() => {
+    navigation.setOptions({
+      onNextPress: updateCleaningTime
+    })
+  }, [navigation])
 
   return (
     <SafeAreaView className="flex-1 bg-white">

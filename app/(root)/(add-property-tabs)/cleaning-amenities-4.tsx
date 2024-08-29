@@ -1,19 +1,22 @@
-import React from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import React, { useEffect } from 'react'
+import { Alert, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import SelectCard from '@/components/common/SelectCard'
 import useAddPropertyStore from '@/store/useAddProperty'
 import { CleaningAmenity } from '@/types/property'
+import { router, useNavigation } from 'expo-router'
+import { supabase } from '@/lib/supabase'
+import { AddPropertyRoutes } from '@/constants/routes'
 
 const amenities: CleaningAmenity[] = [
   {
-    id: 'cleaningTools',
+    id: 'cleaning_tools',
     name: '청소도구',
     image: require('@/assets/icons/amenities/cleaning-tools.png')
   },
   {
-    id: 'airConditionerOrHeater',
+    id: 'air_conditioner',
     name: '에어컨',
     image: require('@/assets/icons/amenities/air-conditioning.png')
   },
@@ -38,14 +41,15 @@ const amenities: CleaningAmenity[] = [
     image: require('@/assets/icons/amenities/parking.png')
   },
   {
-    id: 'nearbyLaundry',
-    name: '인근 빨래방',
+    id: 'laundry',
+    name: '빨래방',
     image: require('@/assets/icons/amenities/washing-machine.png')
   }
 ]
 
 const CleaningAmenities = () => {
-  const { cleaningAmenities, setCleaningAmenities } = useAddPropertyStore()
+  const navigation = useNavigation()
+  const { cleaningAmenities, setCleaningAmenities, propertyId } = useAddPropertyStore()
 
   const onSelectAmenities = (amenity: CleaningAmenity) => {
     if (cleaningAmenities.some((item) => item.id === amenity.id)) {
@@ -54,6 +58,39 @@ const CleaningAmenities = () => {
     }
     setCleaningAmenities([...cleaningAmenities, amenity])
   }
+
+  const updateCleaningAmenities = async () => {
+    const amenities = useAddPropertyStore.getState().cleaningAmenities.reduce(
+      (acc, item) => {
+        acc[item.id] = true
+        return acc
+      },
+      {} as { [key: string]: boolean }
+    )
+
+    const { error } = await supabase.from('property_amenities').insert({
+      property_id: propertyId,
+      ...amenities
+    })
+
+    if (error) {
+      // 이미 등록된 경우
+      if (error.code === '23505') {
+        router.push(`/${AddPropertyRoutes.CLEANING_LIST_5}`)
+        return
+      }
+      console.error(error)
+      Alert.alert('오류', '청소 편의시설 업데이트 중 오류가 발생했습니다.')
+      return
+    }
+    router.push(`/${AddPropertyRoutes.CLEANING_LIST_5}`)
+  }
+
+  useEffect(() => {
+    navigation.setOptions({
+      onNextPress: updateCleaningAmenities
+    })
+  }, [navigation])
 
   return (
     <SafeAreaView className="bg-white">

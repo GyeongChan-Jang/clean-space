@@ -1,11 +1,15 @@
-import React, { useCallback } from 'react'
-import { Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native'
+import React, { useCallback, useEffect } from 'react'
+import { Text, View, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import useAddPropertyStore from '@/store/useAddProperty'
+import { router, useNavigation } from 'expo-router'
+import { supabase } from '@/lib/supabase'
+import { AddPropertyRoutes } from '@/constants/routes'
 
 const RegistrationPrice = () => {
-  const { cleaningPrice, setCleaningPrice } = useAddPropertyStore()
+  const navigation = useNavigation()
+  const { cleaningPrice, setCleaningPrice, propertyId } = useAddPropertyStore()
 
   const suggestedPrices = [30000, 35000, 40000, 45000, 50000]
 
@@ -23,6 +27,30 @@ const RegistrationPrice = () => {
   )
 
   const formattedPrice = formatNumber(cleaningPrice)
+
+  const updateCleaningPrice = async () => {
+    const { cleaningPrice } = useAddPropertyStore.getState()
+    try {
+      await supabase
+        .from('properties')
+        .update({
+          open: true,
+          cleaning_price: cleaningPrice
+        })
+        .eq('property_id', propertyId)
+      router.push(`/${AddPropertyRoutes.COMPLETE}`)
+    } catch (error) {
+      console.error(error)
+      Alert.alert('오류', '청소 가격 업데이트 중 오류가 발생했습니다.')
+      return
+    }
+  }
+
+  useEffect(() => {
+    navigation.setOptions({
+      onNextPress: updateCleaningPrice
+    })
+  }, [navigation])
 
   return (
     <SafeAreaView className="flex-1 bg-white">

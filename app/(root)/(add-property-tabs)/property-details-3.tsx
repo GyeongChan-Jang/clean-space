@@ -1,11 +1,14 @@
 import { Ionicons } from '@expo/vector-icons'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { ADD_PROPERTY_MAX_DESCRIPTION_LENGTH } from '@/constants'
 import useAddPropertyStore from '@/store/useAddProperty'
+import { router, useNavigation } from 'expo-router'
+import { supabase } from '@/lib/supabase'
+import { AddPropertyRoutes } from '@/constants/routes'
 
 type FormData = {
   name: string
@@ -13,27 +16,57 @@ type FormData = {
   size: string
 }
 
-const SpaceDetails = () => {
-  const { spaceDetails, setSpaceDetails } = useAddPropertyStore()
+const PropertyDetailsScreen = () => {
+  const { propertyDetails, setPropertyDetails, propertyId } = useAddPropertyStore()
+  const navigation = useNavigation()
 
   const {
     control,
     formState: { errors }
   } = useForm<FormData>({
     defaultValues: {
-      name: spaceDetails.name,
-      description: spaceDetails.description,
-      size: spaceDetails.size > 0 ? spaceDetails.size.toString() : ''
+      name: propertyDetails.name,
+      description: propertyDetails.description,
+      size: propertyDetails.size > 0 ? propertyDetails.size.toString() : ''
     }
   })
 
   const handleIncrement = (field: 'rooms' | 'beds' | 'bathrooms') => {
-    setSpaceDetails({ [field]: spaceDetails[field] + 1 })
+    setPropertyDetails({ [field]: propertyDetails[field] + 1 })
   }
 
   const handleDecrement = (field: 'rooms' | 'beds' | 'bathrooms') => {
-    setSpaceDetails({ [field]: Math.max(0, spaceDetails[field] - 1) })
+    setPropertyDetails({ [field]: Math.max(0, propertyDetails[field] - 1) })
   }
+
+  const updatePropertyDetails = async () => {
+    const { name, description, size, rooms, beds, bathrooms } = useAddPropertyStore.getState().propertyDetails
+    const { error } = await supabase
+      .from('properties')
+      .update({
+        name,
+        description,
+        area_sqm: size,
+        area_pyeong: size * 0.3025,
+        room_count: rooms,
+        bed_count: beds,
+        toilet_count: bathrooms
+      })
+      .eq('property_id', propertyId)
+
+    if (error) {
+      console.log(error)
+      Alert.alert('오류', '공간 상세정보 업데이트에 실패했습니다.')
+      return
+    }
+    router.push(`/${AddPropertyRoutes.CLEANING_AMENITIES_4}`)
+  }
+
+  useEffect(() => {
+    navigation.setOptions({
+      onNextPress: updatePropertyDetails
+    })
+  }, [navigation])
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -51,7 +84,7 @@ const SpaceDetails = () => {
                 onBlur={onBlur}
                 onChangeText={(text) => {
                   onChange(text)
-                  setSpaceDetails({ name: text })
+                  setPropertyDetails({ name: text })
                 }}
                 value={value}
                 placeholder="숙소 이름을 입력해주세요"
@@ -80,7 +113,7 @@ const SpaceDetails = () => {
                 onChangeText={(text) => {
                   if (text.length <= ADD_PROPERTY_MAX_DESCRIPTION_LENGTH) {
                     onChange(text)
-                    setSpaceDetails({ description: text })
+                    setPropertyDetails({ description: text })
                   }
                 }}
                 value={value}
@@ -116,7 +149,7 @@ const SpaceDetails = () => {
                 onChangeText={(text) => {
                   if (text === '' || /^[0-9]+$/.test(text)) {
                     onChange(text)
-                    setSpaceDetails({ size: Number(text) || 0 })
+                    setPropertyDetails({ size: Number(text) || 0 })
                   }
                 }}
                 value={value}
@@ -145,7 +178,7 @@ const SpaceDetails = () => {
                 <TouchableOpacity onPress={() => handleDecrement(item.field)} className="p-2">
                   <Ionicons name="remove-circle-outline" size={40} color="#AAAAAA" />
                 </TouchableOpacity>
-                <Text className="text-xl w-[30px] text-center font-Pretendard">{spaceDetails[item.field]}</Text>
+                <Text className="text-xl w-[30px] text-center font-Pretendard">{propertyDetails[item.field]}</Text>
                 <TouchableOpacity onPress={() => handleIncrement(item.field)} className="p-2">
                   <Ionicons name="add-circle-outline" size={40} color="#AAAAAA" />
                 </TouchableOpacity>
@@ -158,4 +191,4 @@ const SpaceDetails = () => {
   )
 }
 
-export default SpaceDetails
+export default PropertyDetailsScreen
