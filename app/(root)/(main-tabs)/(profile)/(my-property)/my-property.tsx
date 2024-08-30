@@ -5,9 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 import FloatingButton from '@/components/common/FloatingButton'
 import PropertyItem from '@/components/property/PropertyItem'
-import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
-import { useGetProperties } from '@/hooks/queries/useGetProperties'
+import { useGetProperties } from '@/hooks/queries/graphql/useGetProperties'
 
 interface Property {
   id: string
@@ -73,10 +72,7 @@ const MyProperty = () => {
   const [properties, setProperties] = useState<Property[]>(propertyList)
   const { user } = useAuth()
 
-  console.log(user?.id)
-  // 숙소 가져오기
-  const { data } = useGetProperties(user?.id)
-
+  const { loading, error, data } = useGetProperties()
   console.log(data)
 
   const onAddPropertyPress = () => {
