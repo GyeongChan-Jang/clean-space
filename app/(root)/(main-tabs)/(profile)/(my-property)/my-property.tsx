@@ -106,9 +106,13 @@ const MyProperty = () => {
           <Text className="text-3xl font-PretendardBold text-secondary-900">숙소</Text>
         </View>
         {/* 숙소 리스트 */}
-        {/* {properties?.map((property) => (
-          <PropertyItem key={property.id} {...property} onToggle={(newStatus) => onToggle(property.id, newStatus)} />
-        ))} */}
+        {properties?.map((property) => (
+          <PropertyItem
+            key={property.property_id}
+            item={property}
+            onToggle={(newStatus) => onToggle(property.property_id, newStatus)}
+          />
+        ))}
       </Animated.ScrollView>
       <FloatingButton onPress={onAddPropertyPress} scrollY={scrollY} text="숙소등록" icon="plus" />
     </SafeAreaView>

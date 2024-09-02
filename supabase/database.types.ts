@@ -569,9 +569,9 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "cleaning_guidelines_property_id_fkey"
+            foreignKeyName: "property_cleaning_guidelines_property_id_fkey"
             columns: ["property_id"]
-            isOneToOne: true
+            isOneToOne: false
             referencedRelation: "properties"
             referencedColumns: ["property_id"]
           },
@@ -632,38 +632,11 @@ export type Database = {
           terrace?: boolean | null
           working_space?: boolean | null
         }
-        Relationships: []
-      }
-      property_photos: {
-        Row: {
-          caption: string | null
-          created_at: string
-          id: number
-          is_main_photo: boolean
-          photo_url: string
-          property_id: string
-        }
-        Insert: {
-          caption?: string | null
-          created_at?: string
-          id?: number
-          is_main_photo?: boolean
-          photo_url?: string
-          property_id?: string
-        }
-        Update: {
-          caption?: string | null
-          created_at?: string
-          id?: number
-          is_main_photo?: boolean
-          photo_url?: string
-          property_id?: string
-        }
         Relationships: [
           {
-            foreignKeyName: "property_photos_property_id_fkey"
+            foreignKeyName: "property_cleaning_list_property_id_fkey"
             columns: ["property_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "properties"
             referencedColumns: ["property_id"]
           },

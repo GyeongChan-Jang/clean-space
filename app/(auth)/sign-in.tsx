@@ -1,25 +1,34 @@
 import { initializeKakaoSDK } from '@react-native-kakao/core'
-import { login, logout } from '@react-native-kakao/user'
+import { login } from '@react-native-kakao/user'
 import { router } from 'expo-router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Alert, Image, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import CustomButton from '@/components/common/CustomButton'
+
 import { supabase } from '@/lib/supabase'
+import userStore from '@/store/userStore'
+import Loader from '@/components/common/LoadingOverlay'
 
 const SignIn = () => {
+  const [isLoading, setIsLoading] = useState(false)
+  const { setUser } = userStore()
+
   useEffect(() => {
-    if (!process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY) return
-    initializeKakaoSDK(process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY)
+    if (process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY) {
+      initializeKakaoSDK(process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY)
+    }
   }, [])
 
   const handleKakaoLogin = async () => {
-    const response = await login()
-
-    if (!response.idToken) return
-
+    setIsLoading(true)
     try {
+      const response = await login()
+      if (!response.idToken) {
+        throw new Error('카카오 로그인 실패: ID 토큰을 받지 못했습니다.')
+      }
+
       const { data, error } = await supabase.auth.signInWithIdToken({
         provider: 'kakao',
         token: response.idToken
@@ -27,7 +36,6 @@ const SignIn = () => {
 
       if (error) throw error
 
-      // 사용자 정보 확인
       const { data: existingUser, error: userError } = await supabase
         .from('users')
         .select()
@@ -35,41 +43,46 @@ const SignIn = () => {
         .single()
 
       if (userError && userError.code !== 'PGRST116') {
-        // PGRST116는 결과가 없음을 의미
-        Alert.alert('사용자 정보 조회 중 오류가 발생했습니다.', userError?.toString())
-        console.error('사용자 정보 조회 중 오류 발생:', userError)
-        return
+        throw userError
       }
 
-      if (!existingUser && data.user.id && data.user.email) {
-        const { data: newUser } = await supabase
+      if (!existingUser && data.user?.id && data.user?.email) {
+        const { data: newUser, error: insertError } = await supabase
           .from('users')
           .upsert({
-            id: data.user?.id,
-            name: data.user?.user_metadata.name,
-            email: data.user?.email
+            id: data.user.id,
+            name: data.user.user_metadata.name,
+            email: data.user.email
           })
           .select()
-        // setUser(newUser.data);
-        console.log('새로운 사용자 정보가 생성되었습니다.(sign-in)', newUser)
+          .single()
 
+        if (insertError) throw insertError
+
+        setUser(newUser)
         router.push('/user-setup')
-        // router.push("/(root)/(main-tabs)/home");
-      } else {
-        // 사용자 정보가 이미 있으면 홈 화면으로 이동
+      } else if (existingUser) {
+        setUser(existingUser)
         router.push('/(root)/(main-tabs)/home')
       }
     } catch (error) {
-      Alert.alert('카카오 로그인 중 오류가 발생했습니다.', error?.toString())
-      console.log('카카오 로그인중 에러가 발생했습니다.', error)
+      console.error('카카오 로그인 중 오류:', error)
+      // showErrorAlert('로그인 오류', '카카오 로그인 중 문제가 발생했습니다. 다시 시도해 주세요.')
+      Alert.alert('로그인 오류', '카카오 로그인 중 문제가 발생했습니다. 다시 시도해 주세요.')
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  const handleKakaoLogout = async () => {
-    await logout()
+  const handleAppleLogin = async () => {
+    // 애플 로그인 로직 구현
+    // showErrorAlert('준비 중', '애플 로그인 기능은 현재 개발 중입니다.')
+    Alert.alert('준비 중', '애플 로그인 기능은 현재 개발 중입니다.')
   }
+
   return (
     <SafeAreaView className="flex-1 items-center bg-primary-500">
+      {/* {isLoading && <Loader />} */}
       <View className="flex-[1.5] w-1/3 justify-center items-center">
         <Image resizeMode="contain" className="w-full h-full" source={require('@/assets/icons/icon.png')} />
       </View>
@@ -84,10 +97,8 @@ const SignIn = () => {
             <Image className="w-5 h-5 mx-2" resizeMode="contain" source={require('@/assets/icons/kakao.png')} />
           )}
         />
-
         <CustomButton
-          // onPress={() => router.navigate("/(root)/(main-tabs)/home")}
-          onPress={() => {}}
+          onPress={handleAppleLogin}
           style={{ backgroundColor: '#222222' }}
           className="w-56 shadow-none rounded-2xl"
           textVariant="default"

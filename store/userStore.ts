@@ -1,7 +1,6 @@
+import { Tables } from '@/supabase/database.types'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { create } from 'zustand'
-
-import { Tables } from '@/database.types'
 
 export interface UserStore {
   user: Tables<'users'> | null
