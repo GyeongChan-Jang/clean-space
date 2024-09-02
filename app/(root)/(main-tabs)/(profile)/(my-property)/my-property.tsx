@@ -73,7 +73,6 @@ const MyProperty = () => {
   const { user } = useAuth()
 
   const { data: properties, isLoading } = useGetProperties(user?.id)
-  console.log(properties)
 
   const onAddPropertyPress = () => {
     router.push('/(add-property-tabs)')

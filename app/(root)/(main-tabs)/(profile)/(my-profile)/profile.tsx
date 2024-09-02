@@ -1,16 +1,21 @@
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import React from 'react'
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { CompoundList } from '@/components/common/CompoundList'
 import AddPropertyCard from '@/components/property/AddPropertyCard'
 import userStore from '@/store/userStore'
 import { AddPropertyRoutes } from '@/constants/routes'
+import { useAuth } from '@/hooks/useAuth'
+import { logout, unlink } from '@react-native-kakao/user'
 
 const Profile = () => {
-  const { user } = userStore()
+  const { user, userLogout, initUser } = userStore()
+  const { user: authUser, signOut } = useAuth()
+
+  console.log(user)
 
   const onCardPress = () => {
     router.push(`/${AddPropertyRoutes.ADD_PROPERTY}`)
@@ -20,6 +25,32 @@ const Profile = () => {
     if (itemId === '1') {
       router.push('/(profile)/my-property')
     }
+  }
+
+  const onProfilePress = () => {
+    router.push('/(profile)/(my-profile)/profile-detail')
+  }
+
+  // 로그아웃
+  // 카카오로그인해제, 세션 삭제
+  // 로그인 페이지로 이동
+
+  const onLogoutPress = () => {
+    Alert.alert('로그아웃', '정말로 로그아웃 하시겠습니까?', [
+      {
+        text: '취소',
+        style: 'cancel'
+      },
+      {
+        text: '로그아웃',
+        onPress: () => {
+          signOut()
+          logout()
+          userLogout()
+          router.replace('/')
+        }
+      }
+    ])
   }
 
   return (
@@ -32,7 +63,7 @@ const Profile = () => {
         </View>
 
         {/* 프로필 */}
-        <TouchableOpacity className="flex-row justify-between items-center">
+        <TouchableOpacity className="flex-row justify-between items-center" onPress={onProfilePress}>
           <View className="flex-row items-center gap-2.5">
             <View className="w-[50px] h-[50px] rounded-full overflow-hidden border-2 border-secondary-300">
               <Image
@@ -72,6 +103,13 @@ const Profile = () => {
           />
           <CompoundList.Divider />
         </CompoundList>
+
+        {/* 로그아웃 */}
+        <View className="flex items-end mt-5">
+          <TouchableOpacity onPress={onLogoutPress}>
+            <Text className="border-b-[1px]">로그아웃</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   )
