@@ -1,4 +1,5 @@
 import { getProperties } from '@/api/properties'
+import { Database, Tables } from '@/database.types'
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 
 export const useGetProperties = (hostId: string | undefined, queryOptions?: UseQueryOptions) => {

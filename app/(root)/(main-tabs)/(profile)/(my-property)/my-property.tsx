@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import FloatingButton from '@/components/common/FloatingButton'
 import PropertyItem from '@/components/property/PropertyItem'
 import { useAuth } from '@/hooks/useAuth'
-import { useGetProperties } from '@/hooks/queries/graphql/useGetProperties'
+import { useGetProperties } from '@/hooks/queries/react-query/useGetProperties'
 
 interface Property {
   id: string
@@ -69,11 +69,11 @@ const propertyList: Property[] = [
 
 const MyProperty = () => {
   const scrollY = useRef(new Animated.Value(0)).current
-  const [properties, setProperties] = useState<Property[]>(propertyList)
+  // const [properties, setProperties] = useState<Property[]>(propertyList)
   const { user } = useAuth()
 
-  const { loading, error, data } = useGetProperties()
-  console.log(data)
+  const { data: properties, isLoading } = useGetProperties(user?.id)
+  console.log(properties)
 
   const onAddPropertyPress = () => {
     router.push('/(add-property-tabs)')
@@ -83,11 +83,10 @@ const MyProperty = () => {
     try {
       // 서버에 상태 변경 요청을 보냅니다.
       // await updatePropertyStatus(id, newStatus);
-
       // 로컬 상태를 업데이트합니다.
-      setProperties((prevProperties) =>
-        prevProperties.map((property) => (property.id === id ? { ...property, isActive: newStatus } : property))
-      )
+      // setProperties((prevProperties) =>
+      //   prevProperties.map((property) => (property.id === id ? { ...property, isActive: newStatus } : property))
+      // )
     } catch (error) {
       console.error('Failed to update property status:', error)
       // 에러 처리 (예: 사용자에게 알림)
@@ -108,9 +107,9 @@ const MyProperty = () => {
           <Text className="text-3xl font-PretendardBold text-secondary-900">숙소</Text>
         </View>
         {/* 숙소 리스트 */}
-        {properties.map((property) => (
+        {/* {properties?.map((property) => (
           <PropertyItem key={property.id} {...property} onToggle={(newStatus) => onToggle(property.id, newStatus)} />
-        ))}
+        ))} */}
       </Animated.ScrollView>
       <FloatingButton onPress={onAddPropertyPress} scrollY={scrollY} text="숙소등록" icon="plus" />
     </SafeAreaView>
