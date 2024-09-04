@@ -132,6 +132,8 @@ const CleaningGuidelines = () => {
   const navigation = useNavigation()
   const { user } = useAuth()
 
+  console.log('cleaningGuidelines', cleaningGuidelines)
+
   const pickImages = async () => {
     let result = await launchImageLibraryAsync({
       mediaTypes: MediaTypeOptions.Images,
@@ -154,34 +156,34 @@ const CleaningGuidelines = () => {
   const updateCleaningGuidelines = async () => {
     try {
       const cleaningGuidelines = useAddPropertyStore.getState().cleaningGuidelines
-      const user = useAuth().user
-      const {
-        data: uploadedImages,
-        isError,
-        isLoading
-      } = await uploadImages(
-        process.env.EXPO_PUBLIC_BUCKET_PROPERTY_GUIDELINE,
-        user?.id,
-        cleaningGuidelines.map((guideline) => guideline.image),
-        propertyId
-      )
-      if (isError) {
-        Alert.alert('오류', '사진 업로드 중 오류가 발생했습니다.')
-        return
-      }
+      console.log('cleaningGuidelines', cleaningGuidelines)
+      // const {
+      //   data: uploadedImages,
+      //   isError,
+      //   isLoading
+      // } = await uploadImages(
+      //   process.env.EXPO_PUBLIC_BUCKET_PROPERTY_GUIDELINE,
+      //   user?.id,
+      //   cleaningGuidelines.map((guideline) => guideline.image),
+      //   propertyId
+      // )
+      // if (isError) {
+      //   Alert.alert('오류', '사진 업로드 중 오류가 발생했습니다.')
+      //   return
+      // }
 
-      const guidelines = uploadedImages?.map((image, index) => ({
-        property_id: propertyId,
-        image_url: image,
-        description: cleaningGuidelines[index].description,
-        order: index + 1
-      }))
+      // const guidelines = uploadedImages?.map((image, index) => ({
+      //   property_id: propertyId,
+      //   image_url: image,
+      //   description: cleaningGuidelines[index].description,
+      //   order: index + 1
+      // }))
 
-      if (guidelines) {
-        await Promise.all(
-          guidelines.map((guideline) => supabase.from('property_cleaning_guidelines').insert(guideline))
-        )
-      }
+      // if (guidelines) {
+      //   await Promise.all(
+      //     guidelines.map((guideline) => supabase.from('property_cleaning_guidelines').insert(guideline))
+      //   )
+      // }
 
       router.push(`/${AddPropertyRoutes.CLEANING_TIME_7}`)
     } catch (error) {

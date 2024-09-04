@@ -3,18 +3,47 @@ import React from 'react'
 import { Image, Text, View } from 'react-native'
 import { Switch } from 'react-native-gesture-handler'
 
-interface PropertyProps {
-  item: Tables<'properties'>
-  onToggle: (value: boolean) => void
+type Property = Tables<'properties'> & {
+  property_cleaning_guidelines: Tables<'property_cleaning_guidelines'>[]
 }
 
-const PropertyItem = ({ item, onToggle }: PropertyProps) => {
+interface PropertyProps {
+  item: Property
+  onToggle: (value: boolean) => void
+  isLoading: boolean
+}
+
+const PropertyItemSkeleton = () => {
+  return (
+    <View className="mb-5 bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse">
+      <View className="w-full h-48 bg-gray-300 rounded-t-2xl" />
+      <View className="p-4">
+        <View className="flex-row justify-between items-center mb-2">
+          <View className="h-6 bg-gray-300 rounded w-3/4" />
+          <View className="w-12 h-6 bg-gray-300 rounded" />
+        </View>
+        <View className="h-5 bg-gray-300 rounded w-2/3 mb-1" />
+        <View className="h-4 bg-gray-300 rounded w-1/2" />
+      </View>
+    </View>
+  )
+}
+
+const PropertyItem = ({ item, onToggle, isLoading }: PropertyProps) => {
+  if (isLoading) {
+    return <PropertyItemSkeleton />
+  }
+
+  console.log('item.property_cleaning_guidelines', item.property_cleaning_guidelines)
+
   return (
     <View className="mb-5 bg-white rounded-2xl shadow-lg overflow-hidden">
       <View className="relative">
         <Image
           source={{
-            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjaWBzb-WRlAIAii3_lcE5zhCicIN0e0ovJQ&s'
+            uri:
+              item.property_cleaning_guidelines[0]?.image_url ??
+              'https://www.travelandleisure.com/thmb/U_ek9iFrp3UwNSOf5xW7MsTEV88=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/header-zion-ecocabin-WISHLISTBNB0222-f2649df02ff748c5bcff43052f20e309.jpg'
           }}
           className="w-full h-48 rounded-t-2xl"
         />

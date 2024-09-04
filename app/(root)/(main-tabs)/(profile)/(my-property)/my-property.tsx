@@ -69,7 +69,7 @@ const propertyList: Property[] = [
 
 const MyProperty = () => {
   const scrollY = useRef(new Animated.Value(0)).current
-  // const [properties, setProperties] = useState<Property[]>(propertyList)
+
   const { user } = useAuth()
 
   const { data: properties, isLoading } = useGetProperties(user?.id)
@@ -92,6 +92,8 @@ const MyProperty = () => {
     }
   }
 
+  console.log('properties', properties)
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <Animated.ScrollView
@@ -110,6 +112,7 @@ const MyProperty = () => {
           <PropertyItem
             key={property.property_id}
             item={property}
+            isLoading={isLoading}
             onToggle={(newStatus) => onToggle(property.property_id, newStatus)}
           />
         ))}

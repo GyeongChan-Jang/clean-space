@@ -368,7 +368,6 @@ export type Database = {
           created_at: string
           deposit: number | null
           description: string | null
-          guide_id: number | null
           host_id: string
           name: string | null
           open: boolean | null
@@ -390,7 +389,6 @@ export type Database = {
           created_at?: string
           deposit?: number | null
           description?: string | null
-          guide_id?: number | null
           host_id?: string
           name?: string | null
           open?: boolean | null
@@ -412,7 +410,6 @@ export type Database = {
           created_at?: string
           deposit?: number | null
           description?: string | null
-          guide_id?: number | null
           host_id?: string
           name?: string | null
           open?: boolean | null
@@ -423,13 +420,6 @@ export type Database = {
           toilet_count?: number | null
         }
         Relationships: [
-          {
-            foreignKeyName: "properties_guide_id_fkey"
-            columns: ["guide_id"]
-            isOneToOne: false
-            referencedRelation: "property_cleaning_guidelines"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "properties_host_id_fkey"
             columns: ["host_id"]

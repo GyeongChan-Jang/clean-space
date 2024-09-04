@@ -15,8 +15,6 @@ const Profile = () => {
   const { user, userLogout, initUser } = userStore()
   const { user: authUser, signOut } = useAuth()
 
-  console.log(user)
-
   const onCardPress = () => {
     router.push(`/${AddPropertyRoutes.ADD_PROPERTY}`)
   }

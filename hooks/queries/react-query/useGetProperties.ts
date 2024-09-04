@@ -6,6 +6,7 @@ export const useGetProperties = (hostId: string | undefined) => {
   return useQuery({
     queryFn: () => getProperties(hostId),
     queryKey: ['properties', hostId],
+    enabled: !!hostId,
     retry: false
   })
 }
