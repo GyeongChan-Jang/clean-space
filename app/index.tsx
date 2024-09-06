@@ -1,55 +1,30 @@
-import { initializeKakaoSDK } from '@react-native-kakao/core'
-import { isLogined, logout, unlink } from '@react-native-kakao/user'
+import Loader from '@/components/common/LoadingOverlay'
+import { useGetProfiles } from '@/hooks/queries/react-query/useGetProfiles'
+import { useAuth } from '@/store/useAuthStore'
 import { Redirect } from 'expo-router'
-import { useEffect, useState } from 'react'
-
-import { useAuth } from '@/hooks/useAuth'
-import userStore from '@/store/userStore'
+import { View } from 'react-native'
 
 const Page = () => {
-  const { user: userAuth, signOut } = useAuth()
-  const { user, initUser } = userStore()
-  const [isKakaoLoggedIn, setIsKakaoLoggedIn] = useState<boolean | null>(null)
-  const [isInitialized, setIsInitialized] = useState(false)
+  const { user, session, initialized, signOut } = useAuth()
 
-  useEffect(() => {
-    const initialize = async () => {
-      if (process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY) {
-        initializeKakaoSDK(process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY)
-      }
+  const { data: profiles, isLoading } = useGetProfiles(user?.id)
 
-      try {
-        await initUser()
-        const loggedIn = await isLogined()
-        setIsKakaoLoggedIn(loggedIn)
-      } catch (error) {
-        console.error('초기화 중 오류 발생:', error)
-        setIsKakaoLoggedIn(false)
-      } finally {
-        setIsInitialized(true)
-      }
-    }
-
-    initialize()
-  }, [])
-
-  // useEffect(() => {
-  //   signOut()
-  //   logout()
-  //   unlink()
-  // }, [])
-
-  if (!isInitialized) {
-    return null // 또는 로딩 인디케이터를 표시
+  if (!initialized || isLoading) {
+    return (
+      <View>
+        <Loader />
+      </View>
+    )
   }
 
   // 1. 로그인X -> /(auth)/welcome
-  if (!userAuth && !isKakaoLoggedIn) return <Redirect href="/(auth)/welcome" />
+  if (!user && !session) return <Redirect href="/(auth)/sign-in" />
 
-  // 2. 로그인O, 등록X -> /user-setup
-  if (userAuth && !user) return <Redirect href="/(auth)/user-setup" />
+  // 2. 로그인O, Profile 등록X -> /user-setup
+  if (user && !profiles) return <Redirect href="/(auth)/user-setup" />
 
-  // 3. 로그인O, 등록O -> /(root)/(main-tabs)/home
+  // 3. 로그인O, Profile 등록O -> /(root)/(main-tabs)/home
+  if (user && profiles) return <Redirect href="/(root)/(main-tabs)/home" />
   return <Redirect href="/(root)/(main-tabs)/home" />
 }
 

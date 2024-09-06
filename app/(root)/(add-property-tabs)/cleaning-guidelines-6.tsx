@@ -1,15 +1,13 @@
-import { ImagePickerAsset, launchImageLibraryAsync, MediaTypeOptions } from 'expo-image-picker'
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { launchImageLibraryAsync, MediaTypeOptions } from 'expo-image-picker'
+import React, { useEffect } from 'react'
 import { Alert, Dimensions, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { propertyValues } from '@/app/(root)/(add-property-tabs)/property-type-1'
 import useAddPropertyStore, { CleaningGuideline } from '@/store/useAddProperty'
 import { Ionicons } from '@expo/vector-icons'
-import { useAuth } from '@/hooks/useAuth'
 import { router, useNavigation } from 'expo-router'
-import { uploadImages } from '@/utils/uploadImages'
-import { supabase } from '@/lib/supabase'
 import { AddPropertyRoutes } from '@/constants/routes'
+
 interface InitialCleaningGuidelinesProps {
   pickImages: () => void
 }
@@ -130,7 +128,6 @@ const ImageGrid = ({ guidelines, pickImages }: ImageGridProps) => {
 const CleaningGuidelines = () => {
   const { cleaningGuidelines, setCleaningGuidelines, propertyId } = useAddPropertyStore()
   const navigation = useNavigation()
-  const { user } = useAuth()
 
   console.log('cleaningGuidelines', cleaningGuidelines)
 

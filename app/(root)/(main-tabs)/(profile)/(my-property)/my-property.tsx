@@ -5,8 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 import FloatingButton from '@/components/common/FloatingButton'
 import PropertyItem from '@/components/property/PropertyItem'
-import { useAuth } from '@/hooks/useAuth'
 import { useGetProperties } from '@/hooks/queries/react-query/useGetProperties'
+import { useAuth } from '@/store/useAuthStore'
 
 interface Property {
   id: string

@@ -6,14 +6,14 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { CompoundList } from '@/components/common/CompoundList'
 import AddPropertyCard from '@/components/property/AddPropertyCard'
-import userStore from '@/store/userStore'
 import { AddPropertyRoutes } from '@/constants/routes'
-import { useAuth } from '@/hooks/useAuth'
-import { logout, unlink } from '@react-native-kakao/user'
+import { useAuth } from '@/store/useAuthStore'
+import { useGetProfiles } from '@/hooks/queries/react-query/useGetProfiles'
+import { logout } from '@react-native-kakao/user'
 
 const Profile = () => {
-  const { user, userLogout, initUser } = userStore()
-  const { user: authUser, signOut } = useAuth()
+  const { user, signOut } = useAuth()
+  const { data: profiles } = useGetProfiles(user?.id)
 
   const onCardPress = () => {
     router.push(`/${AddPropertyRoutes.ADD_PROPERTY}`)
@@ -29,10 +29,6 @@ const Profile = () => {
     router.push('/(profile)/(my-profile)/profile-detail')
   }
 
-  // 로그아웃
-  // 카카오로그인해제, 세션 삭제
-  // 로그인 페이지로 이동
-
   const onLogoutPress = () => {
     Alert.alert('로그아웃', '정말로 로그아웃 하시겠습니까?', [
       {
@@ -44,8 +40,7 @@ const Profile = () => {
         onPress: () => {
           signOut()
           logout()
-          userLogout()
-          router.replace('/')
+          router.replace('/(auth)/sign-in')
         }
       }
     ])
@@ -67,12 +62,14 @@ const Profile = () => {
               <Image
                 className="w-full h-full rounded-full"
                 source={
-                  user?.profile_image ? { uri: user.profile_image } : require('@/assets/icons/profile-default.png')
+                  profiles?.profile_image
+                    ? { uri: profiles.profile_image }
+                    : require('@/assets/icons/profile-default.png')
                 }
               />
             </View>
             <View className="justify-center gap-1">
-              <Text className="text-xl font-PretendardBold text-secondary-900">{user?.name}</Text>
+              <Text className="text-xl font-PretendardBold text-secondary-900">{user?.user_metadata.name}</Text>
               <Text className="font-Pretendard text-secondary-700">프로필 보기</Text>
             </View>
           </View>

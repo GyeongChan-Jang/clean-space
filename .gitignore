@@ -24,3 +24,6 @@ expo-env.d.ts
 # webstorm
 .idea/
 .env*
+
+# supabase DB
+/supabase/database.types.ts

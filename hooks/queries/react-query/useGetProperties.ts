@@ -1,6 +1,12 @@
-import { getProperties } from '@/api/properties'
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
+const getProperties = async (hostId: string | undefined) => {
+  if (!hostId) return []
+  const { data } = await supabase.from('properties').select(`*, property_cleaning_guidelines(*)`).eq('host_id', hostId)
+  return data
+}
 
-import { useQuery, UseQueryOptions } from '@tanstack/react-query'
+export { getProperties }
 
 export const useGetProperties = (hostId: string | undefined) => {
   return useQuery({

@@ -36,8 +36,8 @@ export type Database = {
             foreignKeyName: "applications_cleaner_id_fkey"
             columns: ["cleaner_id"]
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "applications_job_id_fkey"
@@ -93,8 +93,8 @@ export type Database = {
             foreignKeyName: "cleaner_profiles_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -155,15 +155,15 @@ export type Database = {
             foreignKeyName: "cleaning_jobs_cleaner_id_fkey"
             columns: ["cleaner_id"]
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "cleaning_jobs_host_id_fkey"
             columns: ["host_id"]
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "cleaning_jobs_property_id_fkey"
@@ -237,8 +237,8 @@ export type Database = {
             foreignKeyName: "conversation_participants_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -298,8 +298,8 @@ export type Database = {
             foreignKeyName: "job_status_cleaner_id_fkey"
             columns: ["cleaner_id"]
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "job_status_job_id_fkey"
@@ -350,6 +350,44 @@ export type Database = {
             foreignKeyName: "messages_sender_id_fkey"
             columns: ["sender_id"]
             isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          name: string | null
+          phone: string | null
+          profile_image: string | null
+          role: Database["public"]["Enums"]["user_role"] | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          name?: string | null
+          phone?: string | null
+          profile_image?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          name?: string | null
+          phone?: string | null
+          profile_image?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -424,8 +462,8 @@ export type Database = {
             foreignKeyName: "properties_host_id_fkey"
             columns: ["host_id"]
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -716,15 +754,15 @@ export type Database = {
             foreignKeyName: "ratings_rated_id_fkey"
             columns: ["rated_id"]
             isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "ratings_rater_id_fkey"
             columns: ["rater_id"]
             isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -751,44 +789,6 @@ export type Database = {
           srtext?: string | null
         }
         Relationships: []
-      }
-      users: {
-        Row: {
-          created_at: string
-          email: string | null
-          id: string
-          name: string | null
-          phone: string | null
-          profile_image: string | null
-          role: Database["public"]["Enums"]["user_role"] | null
-        }
-        Insert: {
-          created_at?: string
-          email?: string | null
-          id: string
-          name?: string | null
-          phone?: string | null
-          profile_image?: string | null
-          role?: Database["public"]["Enums"]["user_role"] | null
-        }
-        Update: {
-          created_at?: string
-          email?: string | null
-          id?: string
-          name?: string | null
-          phone?: string | null
-          profile_image?: string | null
-          role?: Database["public"]["Enums"]["user_role"] | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "users_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
       }
     }
     Views: {

@@ -6,8 +6,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomButton from '@/components/common/CustomButton'
 import { AddPropertyRoutes } from '@/constants/routes'
 import { supabase } from '@/lib/supabase'
-import { useAuth } from '@/hooks/useAuth'
 import useAddPropertyStore from '@/store/useAddProperty'
+import { useAuth } from '@/store/useAuthStore'
 
 const AddProperty = () => {
   const router = useRouter()
