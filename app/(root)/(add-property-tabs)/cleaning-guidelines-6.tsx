@@ -166,6 +166,8 @@ const CleaningGuidelines = () => {
       })
 
       if (isError) return
+
+      // TODO: 업로드 완료된 url properties에 저장
       router.push(`/${AddPropertyRoutes.CLEANING_TIME_7}`)
     } catch (error) {
       console.error('Error uploading images:', error)
