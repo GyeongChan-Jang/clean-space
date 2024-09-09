@@ -7,6 +7,7 @@ import FloatingButton from '@/components/common/FloatingButton'
 import PropertyItem from '@/components/property/PropertyItem'
 import { useGetProperties } from '@/hooks/queries/react-query/useGetProperties'
 import { useAuth } from '@/store/useAuthStore'
+import NoData from '@/components/common/exception/property/NoData'
 
 interface Property {
   id: string
@@ -92,8 +93,6 @@ const MyProperty = () => {
     }
   }
 
-  console.log('properties', properties)
-
   return (
     <SafeAreaView className="flex-1 bg-white">
       <Animated.ScrollView
@@ -116,6 +115,7 @@ const MyProperty = () => {
             onToggle={(newStatus) => onToggle(property.property_id, newStatus)}
           />
         ))}
+        {properties?.length === 0 && <NoData />}
       </Animated.ScrollView>
       <FloatingButton onPress={onAddPropertyPress} scrollY={scrollY} text="숙소등록" icon="plus" />
     </SafeAreaView>

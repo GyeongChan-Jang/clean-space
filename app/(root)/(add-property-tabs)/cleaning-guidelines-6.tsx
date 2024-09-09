@@ -6,6 +6,7 @@ import { propertyValues } from '@/app/(root)/(add-property-tabs)/property-type-1
 import useAddPropertyStore, { CleaningGuideline } from '@/store/useAddProperty'
 import { Ionicons } from '@expo/vector-icons'
 import { router, useNavigation } from 'expo-router'
+import useUploadImages from '@/hooks/useUploadImages'
 import { AddPropertyRoutes } from '@/constants/routes'
 
 interface InitialCleaningGuidelinesProps {
@@ -128,19 +129,18 @@ const ImageGrid = ({ guidelines, pickImages }: ImageGridProps) => {
 const CleaningGuidelines = () => {
   const { cleaningGuidelines, setCleaningGuidelines, propertyId } = useAddPropertyStore()
   const navigation = useNavigation()
-
-  console.log('cleaningGuidelines', cleaningGuidelines)
+  const { uploadImages, isLoading, isError, data } = useUploadImages()
 
   const pickImages = async () => {
-    let result = await launchImageLibraryAsync({
+    let results = await launchImageLibraryAsync({
       mediaTypes: MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       aspect: [3, 4],
       quality: 1
     })
 
-    if (!result.canceled) {
-      const newGuidelines = result.assets.map((asset, index) => ({
+    if (!results.canceled) {
+      const newGuidelines = results.assets.map((asset, index) => ({
         id: cleaningGuidelines.length + index,
         image: asset,
         description: ''
@@ -150,38 +150,22 @@ const CleaningGuidelines = () => {
     }
   }
 
-  const updateCleaningGuidelines = async () => {
+  const uploadCleaningGuidelines = async () => {
     try {
       const cleaningGuidelines = useAddPropertyStore.getState().cleaningGuidelines
-      console.log('cleaningGuidelines', cleaningGuidelines)
-      // const {
-      //   data: uploadedImages,
-      //   isError,
-      //   isLoading
-      // } = await uploadImages(
-      //   process.env.EXPO_PUBLIC_BUCKET_PROPERTY_GUIDELINE,
-      //   user?.id,
-      //   cleaningGuidelines.map((guideline) => guideline.image),
-      //   propertyId
-      // )
-      // if (isError) {
-      //   Alert.alert('오류', '사진 업로드 중 오류가 발생했습니다.')
-      //   return
-      // }
 
-      // const guidelines = uploadedImages?.map((image, index) => ({
-      //   property_id: propertyId,
-      //   image_url: image,
-      //   description: cleaningGuidelines[index].description,
-      //   order: index + 1
-      // }))
+      if (!process.env.EXPO_PUBLIC_BUCKET_PROPERTY_GUIDELINE) {
+        console.error('입력된 bucket이 없습니다.')
+        return
+      }
 
-      // if (guidelines) {
-      //   await Promise.all(
-      //     guidelines.map((guideline) => supabase.from('property_cleaning_guidelines').insert(guideline))
-      //   )
-      // }
+      uploadImages({
+        bucket: process.env.EXPO_PUBLIC_BUCKET_PROPERTY_GUIDELINE,
+        folderName: propertyId,
+        imagePickerAssets: cleaningGuidelines.map((guideline) => guideline.image)
+      })
 
+      if (isError) return
       router.push(`/${AddPropertyRoutes.CLEANING_TIME_7}`)
     } catch (error) {
       console.error('Error uploading images:', error)
@@ -192,7 +176,7 @@ const CleaningGuidelines = () => {
 
   useEffect(() => {
     navigation.setOptions({
-      onNextPress: updateCleaningGuidelines
+      onNextPress: uploadCleaningGuidelines
     })
   }, [navigation])
 
