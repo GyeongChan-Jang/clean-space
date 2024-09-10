@@ -51,7 +51,8 @@ const UserSetup = () => {
           user_id: user.id,
           role,
           name: data.name,
-          phone: data.phone
+          phone: data.phone,
+          email: user.user_metadata.email
           // profile_image: user.user_metadata.picture
         })
         .eq('id', user.id)

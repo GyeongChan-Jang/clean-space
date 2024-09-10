@@ -10,6 +10,7 @@ import { AddPropertyRoutes } from '@/constants/routes'
 import { useAuth } from '@/store/useAuthStore'
 import { useGetProfiles } from '@/hooks/queries/react-query/useGetProfiles'
 import { logout } from '@react-native-kakao/user'
+import ProfileCard from '@/components/profile/ProfileCard'
 
 const Profile = () => {
   const { user, signOut } = useAuth()
@@ -26,7 +27,7 @@ const Profile = () => {
   }
 
   const onProfilePress = () => {
-    router.push('/(profile)/(my-profile)/profile-detail')
+    router.push('/(profile)/profile-detail')
   }
 
   const onLogoutPress = () => {
@@ -57,6 +58,7 @@ const Profile = () => {
 
         {/* 프로필 */}
         <TouchableOpacity className="flex-row justify-between items-center" onPress={onProfilePress}>
+          {/* <ProfileCard /> */}
           <View className="flex-row items-center gap-2.5">
             <View className="w-[50px] h-[50px] rounded-full overflow-hidden border-2 border-secondary-300">
               <Image
