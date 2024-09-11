@@ -13,7 +13,7 @@ interface ProfileEditBottomSheetProps {
 
 const ProfileEditBottomSheet = ({ profile, isOpen, onClose, onSave }: ProfileEditBottomSheetProps) => {
   const bottomSheetRef = useRef(null)
-  const snapPoints = ['50%', '75%']
+  const snapPoints = ['90%']
 
   const handleSheetChanges = useCallback(
     (index: number) => {

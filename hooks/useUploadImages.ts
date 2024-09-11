@@ -14,7 +14,7 @@ interface UploadImagesResult {
   isLoading: boolean
   isError: boolean
   data: string[] | null
-  uploadImages: (props: UploadImagesProps) => Promise<void>
+  uploadImages: (props: UploadImagesProps) => Promise<string[] | undefined>
 }
 
 const useUploadImages = (): UploadImagesResult => {
@@ -51,6 +51,7 @@ const useUploadImages = (): UploadImagesResult => {
 
       const uploadedUrls = await Promise.all(uploadPromises)
       setData(uploadedUrls)
+      return uploadedUrls
     } catch (error) {
       console.error('이미지 업로드 실패:', error)
       setIsError(true)

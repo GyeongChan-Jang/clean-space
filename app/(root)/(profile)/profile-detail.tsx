@@ -42,9 +42,9 @@ const ProfileDetail = () => {
         <TouchableOpacity onPress={onPressBack}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleEditPress}>
+        {/* <TouchableOpacity onPress={handleEditPress}>
           <CommonButton title="수정하기" onPress={handleEditPress} variant="secondary" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <ScrollView
         className="flex-grow p-5"
