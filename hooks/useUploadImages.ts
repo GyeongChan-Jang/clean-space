@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ImagePickerAsset, ImagePickerResult } from 'expo-image-picker'
+import { ImagePickerAsset } from 'expo-image-picker'
 import * as FileSystem from 'expo-file-system'
 import { supabase } from '@/lib/supabase'
 import { decode } from 'base64-arraybuffer'
@@ -43,11 +43,14 @@ const useUploadImages = (): UploadImagesResult => {
           throw error
         }
 
-        return data.path
+        // Get the public URL for the uploaded file
+        const { data: publicUrlData } = supabase.storage.from(bucket).getPublicUrl(data.path)
+
+        return publicUrlData.publicUrl
       })
 
-      const uploadedPaths = await Promise.all(uploadPromises)
-      setData(uploadedPaths)
+      const uploadedUrls = await Promise.all(uploadPromises)
+      setData(uploadedUrls)
     } catch (error) {
       console.error('이미지 업로드 실패:', error)
       setIsError(true)

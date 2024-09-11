@@ -34,8 +34,6 @@ const PropertyItem = ({ item, onToggle, isLoading }: PropertyProps) => {
     return <PropertyItemSkeleton />
   }
 
-  console.log('item.property_cleaning_guidelines', item.property_cleaning_guidelines)
-
   return (
     <View className="mb-5 bg-white rounded-2xl shadow-lg overflow-hidden">
       <View className="relative">
@@ -67,7 +65,7 @@ const PropertyItem = ({ item, onToggle, isLoading }: PropertyProps) => {
           />
         </View>
         <Text className="text-base font-PretendardMedium text-secondary-800 mb-1">
-          ₩{item.cleaning_price?.toLocaleString()} / 청소 {item.cleaning_estimated_time}
+          ₩{item.cleaning_price?.toLocaleString()} / 청소시간 {item.cleaning_estimated_time}
         </Text>
         <Text className="text-sm font-Pretendard text-secondary-600">{item.cleaning_start_time}</Text>
       </View>

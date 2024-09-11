@@ -1,5 +1,5 @@
 import { launchImageLibraryAsync, MediaTypeOptions } from 'expo-image-picker'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, Dimensions, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { propertyValues } from '@/app/(root)/(add-property-tabs)/property-type-1'
@@ -8,6 +8,8 @@ import { Ionicons } from '@expo/vector-icons'
 import { router, useNavigation } from 'expo-router'
 import useUploadImages from '@/hooks/useUploadImages'
 import { AddPropertyRoutes } from '@/constants/routes'
+import { supabase } from '@/lib/supabase'
+import Loader from '@/components/common/LoadingOverlay'
 
 interface InitialCleaningGuidelinesProps {
   pickImages: () => void
@@ -129,7 +131,9 @@ const ImageGrid = ({ guidelines, pickImages }: ImageGridProps) => {
 const CleaningGuidelines = () => {
   const { cleaningGuidelines, setCleaningGuidelines, propertyId } = useAddPropertyStore()
   const navigation = useNavigation()
-  const { uploadImages, isLoading, isError, data } = useUploadImages()
+  const { uploadImages, isLoading: imageUploadLoading, isError, data: imageUrls } = useUploadImages()
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const pickImages = async () => {
     let results = await launchImageLibraryAsync({
@@ -151,6 +155,7 @@ const CleaningGuidelines = () => {
   }
 
   const uploadCleaningGuidelines = async () => {
+    setIsLoading(true)
     try {
       const cleaningGuidelines = useAddPropertyStore.getState().cleaningGuidelines
 
@@ -159,20 +164,35 @@ const CleaningGuidelines = () => {
         return
       }
 
-      uploadImages({
+      await uploadImages({
         bucket: process.env.EXPO_PUBLIC_BUCKET_PROPERTY_GUIDELINE,
         folderName: propertyId,
         imagePickerAssets: cleaningGuidelines.map((guideline) => guideline.image)
       })
 
-      if (isError) return
+      if (isError || !imageUrls) {
+        Alert.alert('오류', '사진 업로드 중 오류가 발생했습니다.')
+        return
+      }
 
-      // TODO: 업로드 완료된 url properties에 저장
+      const insertPromises = imageUrls.map((url, index) =>
+        supabase.from('property_cleaning_guidelines').upsert({
+          property_id: propertyId,
+          image_url: url,
+          description: cleaningGuidelines[index].description,
+          order: index + 1
+        })
+      )
+
+      await Promise.all(insertPromises)
+
+      // 성공적으로 업로드 및 저장되었을 때 다음 단계로 이동
       router.push(`/${AddPropertyRoutes.CLEANING_TIME_7}`)
     } catch (error) {
       console.error('Error uploading images:', error)
       Alert.alert('오류', '사진 업로드 중 오류가 발생했습니다.')
-      return
+    } finally {
+      setIsLoading(false)
     }
   }
 
