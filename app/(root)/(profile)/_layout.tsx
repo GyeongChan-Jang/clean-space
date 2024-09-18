@@ -5,7 +5,7 @@ import 'react-native-reanimated'
 const Layout = () => {
   return (
     <Stack>
-      <Stack.Screen name="profile-detail" options={{ headerShown: false }} />
+      <Stack.Screen name="detail-profile" options={{ headerShown: false }} />
     </Stack>
   )
 }

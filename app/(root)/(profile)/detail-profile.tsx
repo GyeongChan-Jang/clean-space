@@ -10,7 +10,7 @@ import { useAuth } from '@/store/useAuthStore'
 import ProfileEditBottomSheet from '@/components/profile/ProfileEdit'
 import { Tables } from '@/supabase/database.types'
 
-const ProfileDetail = () => {
+const DetailProfile = () => {
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false)
   const { user } = useAuth()
   const { data: profile, refetch } = useGetProfiles(user?.id)
@@ -65,4 +65,4 @@ const ProfileDetail = () => {
   )
 }
 
-export default ProfileDetail
+export default DetailProfile

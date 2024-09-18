@@ -27,7 +27,7 @@ const Profile = () => {
   }
 
   const onProfilePress = () => {
-    router.push('/(profile)/profile-detail')
+    router.push('/(profile)/detail-profile')
   }
 
   const onLogoutPress = () => {

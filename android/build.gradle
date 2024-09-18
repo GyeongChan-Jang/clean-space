@@ -21,12 +21,13 @@ buildscript {
     }
 }
 
+apply plugin: "com.facebook.react.rootproject"
+
 allprojects {
     repositories {
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url(new File(['node', '--print', "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), '../android'))
-            url "https://devrepo.kakao.com/nexus/content/groups/public/"
         }
         maven {
             // Android JSC is installed from npm
@@ -38,5 +39,3 @@ allprojects {
         maven { url 'https://www.jitpack.io' }
     }
 }
-
-apply plugin: "com.facebook.react.rootproject"

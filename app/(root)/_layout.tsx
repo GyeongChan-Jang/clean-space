@@ -7,6 +7,7 @@ const Layout = () => {
       <Stack.Screen name="(main-tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="(add-property-tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="(profile)" options={{ headerShown: false }} />
+      <Stack.Screen name="property/[id]" options={{ headerShown: false }} />
     </Stack>
   )
 }

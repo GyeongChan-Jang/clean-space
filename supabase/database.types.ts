@@ -573,26 +573,26 @@ export type Database = {
       property_cleaning_guidelines: {
         Row: {
           created_at: string
-          description: string | null
+          description: string
           id: number
-          image_url: string | null
-          order: number | null
+          image_url: string
+          order: number
           property_id: string
         }
         Insert: {
           created_at?: string
-          description?: string | null
+          description: string
           id?: number
-          image_url?: string | null
-          order?: number | null
+          image_url: string
+          order: number
           property_id?: string
         }
         Update: {
           created_at?: string
-          description?: string | null
+          description?: string
           id?: number
-          image_url?: string | null
-          order?: number | null
+          image_url?: string
+          order?: number
           property_id?: string
         }
         Relationships: [
@@ -607,58 +607,58 @@ export type Database = {
       }
       property_cleaning_list: {
         Row: {
-          amenity: boolean | null
-          bathroom: boolean | null
-          bed_room: boolean | null
-          bedding: boolean | null
+          amenity: boolean
+          bathroom: boolean
+          bed_room: boolean
+          bedding: boolean
           created_at: string
-          dish_washing: boolean | null
-          dressing_room: boolean | null
-          garbage: boolean | null
+          dish_washing: boolean
+          dressing_room: boolean
+          garbage: boolean
           id: number
-          kitchen: boolean | null
-          laundry_dry: boolean | null
-          living_room: boolean | null
+          kitchen: boolean
+          laundry_dry: boolean
+          living_room: boolean
           property_id: string | null
-          refrigerator: boolean | null
-          terrace: boolean | null
-          working_space: boolean | null
+          refrigerator: boolean
+          terrace: boolean
+          working_space: boolean
         }
         Insert: {
-          amenity?: boolean | null
-          bathroom?: boolean | null
-          bed_room?: boolean | null
-          bedding?: boolean | null
+          amenity?: boolean
+          bathroom?: boolean
+          bed_room?: boolean
+          bedding?: boolean
           created_at?: string
-          dish_washing?: boolean | null
-          dressing_room?: boolean | null
-          garbage?: boolean | null
+          dish_washing?: boolean
+          dressing_room?: boolean
+          garbage?: boolean
           id?: number
-          kitchen?: boolean | null
-          laundry_dry?: boolean | null
-          living_room?: boolean | null
+          kitchen?: boolean
+          laundry_dry?: boolean
+          living_room?: boolean
           property_id?: string | null
-          refrigerator?: boolean | null
-          terrace?: boolean | null
-          working_space?: boolean | null
+          refrigerator?: boolean
+          terrace?: boolean
+          working_space?: boolean
         }
         Update: {
-          amenity?: boolean | null
-          bathroom?: boolean | null
-          bed_room?: boolean | null
-          bedding?: boolean | null
+          amenity?: boolean
+          bathroom?: boolean
+          bed_room?: boolean
+          bedding?: boolean
           created_at?: string
-          dish_washing?: boolean | null
-          dressing_room?: boolean | null
-          garbage?: boolean | null
+          dish_washing?: boolean
+          dressing_room?: boolean
+          garbage?: boolean
           id?: number
-          kitchen?: boolean | null
-          laundry_dry?: boolean | null
-          living_room?: boolean | null
+          kitchen?: boolean
+          laundry_dry?: boolean
+          living_room?: boolean
           property_id?: string | null
-          refrigerator?: boolean | null
-          terrace?: boolean | null
-          working_space?: boolean | null
+          refrigerator?: boolean
+          terrace?: boolean
+          working_space?: boolean
         }
         Relationships: [
           {
