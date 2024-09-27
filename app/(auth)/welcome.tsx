@@ -6,7 +6,6 @@ import Swiper from 'react-native-swiper'
 
 import CustomButton from '@/components/common/CustomButton'
 import { onboarding } from '@/constants'
-import userStore from '@/store/userStore'
 
 const Onboarding = () => {
   const swiperRef = useRef<Swiper>(null)
@@ -17,7 +16,7 @@ const Onboarding = () => {
   return (
     <SafeAreaView className="flex h-full items-center justify-between bg-white">
       <TouchableOpacity
-        onPress={() => router.replace('/(auth)/sign-in')}
+        // onPress={() => router.replace('/(auth)/sign-in')}
         className="w-full flex justify-end items-end p-5"
       >
         <Text className="text-black text-md font-PretendardBold">건너뛰기</Text>
@@ -45,7 +44,7 @@ const Onboarding = () => {
 
       <CustomButton
         title={isLastSlide ? '시작하기' : '다음'}
-        onPress={() => (isLastSlide ? router.replace('/(auth)/sign-in') : swiperRef.current?.scrollBy(1))}
+        // onPress={() => (isLastSlide ? router.replace('/(auth)/sign-in') : swiperRef.current?.scrollBy(1))}
         className="w-10/12 mt-2 mb-5"
       />
     </SafeAreaView>

@@ -31,30 +31,30 @@ export default () => {
       },
       plugins: [
         'expo-router',
-        // [
-        //   'expo-build-properties',
-        //   {
-        //     android: {
-        //       extraMavenRepos: ['https://devrepo.kakao.com/nexus/content/groups/public/'],
-        //       newArchEnabled: true
-        //     },
-        //     ios: {
-        //       newArchEnabled: true
-        //     }
-        //   }
-        // ],
-        // [
-        //   '@react-native-kakao/core',
-        //   {
-        //     nativeAppKey: process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY,
-        //     android: {
-        //       authCodeHandlerActivity: true
-        //     },
-        //     ios: {
-        //       handleKakaoOpenUrl: true
-        //     }
-        //   }
-        // ],
+        [
+          'expo-build-properties',
+          {
+            android: {
+              extraMavenRepos: ['https://devrepo.kakao.com/nexus/content/groups/public/'],
+              newArchEnabled: true
+            },
+            ios: {
+              newArchEnabled: true
+            }
+          }
+        ],
+        [
+          '@react-native-kakao/core',
+          {
+            nativeAppKey: process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY,
+            android: {
+              authCodeHandlerActivity: true
+            },
+            ios: {
+              handleKakaoOpenUrl: true
+            }
+          }
+        ],
         [
           'expo-image-picker',
           {
