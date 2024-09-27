@@ -11,6 +11,7 @@ import { useAuth } from '@/store/useAuthStore'
 import { useGetProfiles } from '@/hooks/queries/react-query/useGetProfiles'
 // import { logout } from '@react-native-kakao/user'
 import ProfileCard from '@/components/profile/ProfileCard'
+import { logout } from '@react-native-kakao/user'
 
 const Profile = () => {
   const { user, signOut } = useAuth()
@@ -36,14 +37,14 @@ const Profile = () => {
         text: '취소',
         style: 'cancel'
       },
-      // {
-      //   text: '로그아웃',
-      //   onPress: () => {
-      //     signOut()
-      //     logout()
-      //     router.replace('/(auth)/sign-in')
-      //   }
-      // }
+      {
+        text: '로그아웃',
+        onPress: () => {
+          signOut()
+          logout()
+          router.replace('/(auth)/sign-in')
+        }
+      }
     ])
   }
 

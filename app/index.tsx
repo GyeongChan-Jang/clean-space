@@ -17,14 +17,14 @@ const Page = () => {
     )
   }
 
-  // // 1. 로그인X -> /(auth)/welcome
-  // if (!user && !session) return <Redirect href="/(auth)/sign-in" />
+  // 1. 로그인X -> /(auth)/welcome
+  if (!user && !session) return <Redirect href="/(auth)/sign-in" />
 
-  // // 2. 로그인O, Profile 등록X -> /user-setup
-  // if (user && !profiles) return <Redirect href="/(auth)/user-setup" />
+  // 2. 로그인O, Profile 등록X -> /user-setup
+  if (user && !profiles) return <Redirect href="/(auth)/user-setup" />
 
-  // // 3. 로그인O, Profile 등록O -> /(root)/(main-tabs)/home
-  // if (user && profiles) return <Redirect href="/(root)/(main-tabs)/home" />
+  // 3. 로그인O, Profile 등록O -> /(root)/(main-tabs)/home
+  if (user && profiles) return <Redirect href="/(root)/(main-tabs)/home" />
   return <Redirect href="/(root)/(main-tabs)/home" />
 }
 
